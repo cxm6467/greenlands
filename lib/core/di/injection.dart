@@ -4,7 +4,11 @@ import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/database_helper.dart';
-// Note: Additional imports will be added as we implement more features
+import '../../data/repositories/character_repository_impl.dart';
+import '../../domain/repositories/character_repository.dart';
+import '../../domain/usecases/character/allocate_stat_points.dart';
+import '../../domain/usecases/character/create_character.dart';
+import '../../domain/usecases/character/get_player_character.dart';
 
 final getIt = GetIt.instance;
 final _logger = Logger();
@@ -71,10 +75,15 @@ Future<void> setupDependencies() async {
   // REPOSITORIES
   // ============================================================================
 
-  // TODO: Register repositories as they are implemented
-  // getIt.registerLazySingleton<CharacterRepository>(
-  //   () => CharacterRepositoryImpl(getIt()),
-  // );
+  // Character repository
+  if (!kIsWeb) {
+    getIt.registerLazySingleton<CharacterRepository>(
+      () => CharacterRepositoryImpl(databaseHelper: getIt()),
+    );
+    _logger.i('Character repository registered');
+  }
+
+  // TODO: Register other repositories as they are implemented
   // getIt.registerLazySingleton<QuestRepository>(
   //   () => QuestRepositoryImpl(getIt()),
   // );
@@ -91,21 +100,21 @@ Future<void> setupDependencies() async {
   //   () => NotificationRepositoryImpl(getIt()),
   // );
 
-  _logger.i('Repositories will be registered as implemented');
+  _logger.i('Repositories registered');
 
   // ============================================================================
   // USE CASES
   // ============================================================================
 
-  // TODO: Register use cases as they are implemented
-
   // Character use cases
-  // getIt.registerLazySingleton(() => CreateCharacter(getIt()));
-  // getIt.registerLazySingleton(() => GetCharacter(getIt()));
-  // getIt.registerLazySingleton(() => UpdateCharacterStats(getIt()));
-  // getIt.registerLazySingleton(() => AddXp(getIt()));
-  // getIt.registerLazySingleton(() => LevelUpCharacter(getIt()));
+  if (!kIsWeb) {
+    getIt.registerLazySingleton(() => CreateCharacter(getIt()));
+    getIt.registerLazySingleton(() => GetPlayerCharacter(getIt()));
+    getIt.registerLazySingleton(() => AllocateStatPoints(getIt()));
+    _logger.i('Character use cases registered');
+  }
 
+  // TODO: Register other use cases as they are implemented
   // Quest use cases
   // getIt.registerLazySingleton(() => GetAvailableQuests(getIt()));
   // getIt.registerLazySingleton(() => AcceptQuest(getIt()));
@@ -126,7 +135,7 @@ Future<void> setupDependencies() async {
   // getIt.registerLazySingleton(() => QueueNotification(getIt()));
   // getIt.registerLazySingleton(() => SendNotification(getIt()));
 
-  _logger.i('Use cases will be registered as implemented');
+  _logger.i('Use cases registered');
 
   // ============================================================================
   // SERVICES

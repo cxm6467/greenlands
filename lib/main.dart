@@ -5,6 +5,8 @@ import 'package:logger/logger.dart';
 import 'core/config/app_config.dart';
 import 'core/config/theme_config.dart';
 import 'core/di/injection.dart';
+import 'presentation/providers/character_provider.dart';
+import 'presentation/screens/character/character_creation_screen.dart';
 
 final _logger = Logger();
 
@@ -115,11 +117,33 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final characterState = ref.watch(characterProvider);
+
+    return characterState.when(
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) => Scaffold(
+        body: Center(
+          child: Text('Error loading character: $error'),
+        ),
+      ),
+      data: (character) {
+        if (character == null) {
+          return _buildWelcomeContent(context, ref);
+        }
+        // TODO: Navigate to home screen with character
+        return _buildWelcomeContent(context, ref);
+      },
+    );
+  }
+
+  Widget _buildWelcomeContent(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('THE GREENLANDS'),
@@ -175,11 +199,9 @@ class WelcomeScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Navigate to character creation
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Character creation coming soon!'),
-                        duration: Duration(seconds: 2),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CharacterCreationScreen(),
                       ),
                     );
                   },
