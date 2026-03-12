@@ -17,10 +17,7 @@ class CharacterCreationScreen extends ConsumerWidget {
     final creationNotifier = ref.read(characterCreationProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create Your Hero'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Create Your Hero'), centerTitle: true),
       body: Column(
         children: [
           // Step indicator
@@ -41,7 +38,12 @@ class CharacterCreationScreen extends ConsumerWidget {
           ),
 
           // Navigation buttons
-          _buildNavigationButtons(context, ref, creationState, creationNotifier),
+          _buildNavigationButtons(
+            context,
+            ref,
+            creationState,
+            creationNotifier,
+          ),
         ],
       ),
     );
@@ -173,7 +175,9 @@ class CharacterCreationScreen extends ConsumerWidget {
     if (isLastStep) {
       // Create character
       try {
-        await ref.read(characterProvider.notifier).createNewCharacter(
+        await ref
+            .read(characterProvider.notifier)
+            .createNewCharacter(
               name: state.name,
               race: state.race!,
               characterClass: state.characterClass!,

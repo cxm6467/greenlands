@@ -43,15 +43,27 @@ class AppConfig {
       slackAppToken = dotenv.env['SLACK_APP_TOKEN'] ?? '';
 
       // Load feature flags
-      enableQuestGeneration = _parseBool(dotenv.env['ENABLE_QUEST_GENERATION'], true);
+      enableQuestGeneration = _parseBool(
+        dotenv.env['ENABLE_QUEST_GENERATION'],
+        true,
+      );
       enableChatBots = _parseBool(dotenv.env['ENABLE_CHAT_BOTS'], false);
-      enableNotifications = _parseBool(dotenv.env['ENABLE_NOTIFICATIONS'], true);
-      enableRecurringEvents = _parseBool(dotenv.env['ENABLE_RECURRING_EVENTS'], true);
+      enableNotifications = _parseBool(
+        dotenv.env['ENABLE_NOTIFICATIONS'],
+        true,
+      );
+      enableRecurringEvents = _parseBool(
+        dotenv.env['ENABLE_RECURRING_EVENTS'],
+        true,
+      );
 
       // Load game config
-      maxFellowshipSize = int.tryParse(dotenv.env['MAX_FELLOWSHIP_SIZE'] ?? '8') ?? 8;
-      xpMultiplier = double.tryParse(dotenv.env['XP_MULTIPLIER'] ?? '1.0') ?? 1.0;
-      dailyQuestResetHour = int.tryParse(dotenv.env['DAILY_QUEST_RESET_HOUR'] ?? '0') ?? 0;
+      maxFellowshipSize =
+          int.tryParse(dotenv.env['MAX_FELLOWSHIP_SIZE'] ?? '8') ?? 8;
+      xpMultiplier =
+          double.tryParse(dotenv.env['XP_MULTIPLIER'] ?? '1.0') ?? 1.0;
+      dailyQuestResetHour =
+          int.tryParse(dotenv.env['DAILY_QUEST_RESET_HOUR'] ?? '0') ?? 0;
       debugMode = _parseBool(dotenv.env['DEBUG_MODE'], true);
 
       _logger.i('App configuration loaded successfully');
@@ -60,7 +72,9 @@ class AppConfig {
       _validate();
     } catch (e) {
       _logger.e('Error loading app configuration: $e');
-      throw Exception('Failed to load app configuration. Make sure .env file exists.');
+      throw Exception(
+        'Failed to load app configuration. Make sure .env file exists.',
+      );
     }
   }
 
@@ -78,8 +92,12 @@ class AppConfig {
 
     // Warn if chat bots enabled but no tokens
     if (enableChatBots) {
-      if (googleChatWebhookUrl.isEmpty && discordBotToken.isEmpty && slackAppToken.isEmpty) {
-        _logger.w('Chat bots are enabled but no platform tokens are configured.');
+      if (googleChatWebhookUrl.isEmpty &&
+          discordBotToken.isEmpty &&
+          slackAppToken.isEmpty) {
+        _logger.w(
+          'Chat bots are enabled but no platform tokens are configured.',
+        );
         enableChatBots = false;
       }
     }

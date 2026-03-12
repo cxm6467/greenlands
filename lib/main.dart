@@ -25,13 +25,13 @@ void main() async {
 
     _logger.i('✨ The Greenlands initialized successfully!');
 
-    runApp(
-      const ProviderScope(
-        child: ShireApp(),
-      ),
-    );
+    runApp(const ProviderScope(child: ShireApp()));
   } catch (e, stackTrace) {
-    _logger.e('Failed to initialize The Greenlands', error: e, stackTrace: stackTrace);
+    _logger.e(
+      'Failed to initialize The Greenlands',
+      error: e,
+      stackTrace: stackTrace,
+    );
     runApp(ErrorApp(error: e.toString()));
   }
 }
@@ -96,20 +96,15 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               'A Fantasy Adventure',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: GreenlandsTheme.accentGold,
-                  ),
+                color: GreenlandsTheme.accentGold,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 64),
             // Loading indicator
-            const CircularProgressIndicator(
-              color: GreenlandsTheme.accentGold,
-            ),
+            const CircularProgressIndicator(color: GreenlandsTheme.accentGold),
             const SizedBox(height: 16),
-            Text(
-              'Loading...',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text('Loading...', style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),
@@ -125,13 +120,10 @@ class WelcomeScreen extends ConsumerWidget {
     final characterState = ref.watch(characterProvider);
 
     return characterState.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('Error loading character: $error'),
-        ),
+        body: Center(child: Text('Error loading character: $error')),
       ),
       data: (character) {
         if (character == null) {
@@ -145,9 +137,7 @@ class WelcomeScreen extends ConsumerWidget {
 
   Widget _buildWelcomeContent(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('THE GREENLANDS'),
-      ),
+      appBar: AppBar(title: const Text('THE GREENLANDS')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -231,10 +221,7 @@ class WelcomeScreen extends ConsumerWidget {
         Text(emoji, style: const TextStyle(fontSize: 24)),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
         ),
       ],
     );
@@ -278,11 +265,7 @@ class ErrorApp extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 64,
-                ),
+                const Icon(Icons.error_outline, color: Colors.red, size: 64),
                 const SizedBox(height: 24),
                 const Text(
                   'Failed to initialize The Greenlands',
@@ -306,10 +289,7 @@ class ErrorApp extends StatelessWidget {
                 const SizedBox(height: 32),
                 const Text(
                   'Check that your .env file is configured correctly.',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
                   textAlign: TextAlign.center,
                 ),
               ],

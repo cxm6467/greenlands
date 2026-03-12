@@ -9,11 +9,9 @@ class CharacterRepositoryImpl implements CharacterRepository {
   final DatabaseHelper _databaseHelper;
   final Uuid _uuid;
 
-  CharacterRepositoryImpl({
-    required DatabaseHelper databaseHelper,
-    Uuid? uuid,
-  })  : _databaseHelper = databaseHelper,
-        _uuid = uuid ?? const Uuid();
+  CharacterRepositoryImpl({required DatabaseHelper databaseHelper, Uuid? uuid})
+    : _databaseHelper = databaseHelper,
+      _uuid = uuid ?? const Uuid();
 
   @override
   Future<Character?> getPlayerCharacter() async {
@@ -37,7 +35,8 @@ class CharacterRepositoryImpl implements CharacterRepository {
     final characterId = _uuid.v4();
 
     // Calculate base stats from class
-    final classBaseStats = GameConstants.CLASS_BASE_STATS[characterClass.displayName] ?? {};
+    final classBaseStats =
+        GameConstants.CLASS_BASE_STATS[characterClass.displayName] ?? {};
 
     // Add allocated points
     final baseStats = Map<String, int>.from(classBaseStats);
@@ -98,11 +97,7 @@ class CharacterRepositoryImpl implements CharacterRepository {
   @override
   Future<void> deleteCharacter(String characterId) async {
     final db = await _databaseHelper.database;
-    await db.delete(
-      'characters',
-      where: 'id = ?',
-      whereArgs: [characterId],
-    );
+    await db.delete('characters', where: 'id = ?', whereArgs: [characterId]);
   }
 
   @override
@@ -117,7 +112,8 @@ class CharacterRepositoryImpl implements CharacterRepository {
     int statPointsGained = 0;
 
     // Check for level ups
-    while (newXp >= character.xpToNextLevel && newLevel < GameConstants.MAX_LEVEL) {
+    while (newXp >= character.xpToNextLevel &&
+        newLevel < GameConstants.MAX_LEVEL) {
       newXp -= character.xpToNextLevel;
       newLevel++;
       statPointsGained += 3; // Gain 3 stat points per level

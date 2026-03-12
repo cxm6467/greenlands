@@ -5,12 +5,13 @@ import '../../domain/usecases/character/create_character.dart';
 import '../../domain/usecases/character/get_player_character.dart';
 
 /// Provider for the current player character
-final characterProvider = StateNotifierProvider<CharacterNotifier, AsyncValue<Character?>>((ref) {
-  return CharacterNotifier(
-    getPlayerCharacter: getIt<GetPlayerCharacter>(),
-    createCharacter: getIt<CreateCharacter>(),
-  );
-});
+final characterProvider =
+    StateNotifierProvider<CharacterNotifier, AsyncValue<Character?>>((ref) {
+      return CharacterNotifier(
+        getPlayerCharacter: getIt<GetPlayerCharacter>(),
+        createCharacter: getIt<CreateCharacter>(),
+      );
+    });
 
 class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
   final GetPlayerCharacter _getPlayerCharacter;
@@ -19,9 +20,9 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
   CharacterNotifier({
     required GetPlayerCharacter getPlayerCharacter,
     required CreateCharacter createCharacter,
-  })  : _getPlayerCharacter = getPlayerCharacter,
-        _createCharacter = createCharacter,
-        super(const AsyncValue.loading()) {
+  }) : _getPlayerCharacter = getPlayerCharacter,
+       _createCharacter = createCharacter,
+       super(const AsyncValue.loading()) {
     loadCharacter();
   }
 
@@ -60,9 +61,12 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
 }
 
 /// Provider for character creation state
-final characterCreationProvider = StateNotifierProvider<CharacterCreationNotifier, CharacterCreationState>((ref) {
-  return CharacterCreationNotifier();
-});
+final characterCreationProvider =
+    StateNotifierProvider<CharacterCreationNotifier, CharacterCreationState>((
+      ref,
+    ) {
+      return CharacterCreationNotifier();
+    });
 
 class CharacterCreationState {
   final String name;

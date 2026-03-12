@@ -55,7 +55,9 @@ class _NameInputWidgetState extends ConsumerState<NameInputWidget> {
                     maxLength: 50,
                     textCapitalization: TextCapitalization.words,
                     onChanged: (value) {
-                      ref.read(characterCreationProvider.notifier).setName(value);
+                      ref
+                          .read(characterCreationProvider.notifier)
+                          .setName(value);
                     },
                   ),
                   const SizedBox(height: 8),

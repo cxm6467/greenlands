@@ -218,11 +218,21 @@ class DatabaseHelper {
     // Create indexes for performance
     await db.execute('CREATE INDEX idx_quests_status ON quests(status)');
     await db.execute('CREATE INDEX idx_quests_type ON quests(quest_type)');
-    await db.execute('CREATE INDEX idx_inventory_character ON inventory_items(character_id)');
-    await db.execute('CREATE INDEX idx_dialogue_character_npc ON dialogue_history(character_id, npc_id)');
-    await db.execute('CREATE INDEX idx_dialogue_timestamp ON dialogue_history(timestamp DESC)');
-    await db.execute('CREATE INDEX idx_chat_commands_user ON chat_commands_log(user_id, timestamp DESC)');
-    await db.execute('CREATE INDEX idx_notification_queue_character ON notification_queue(target_character_id, created_at DESC)');
+    await db.execute(
+      'CREATE INDEX idx_inventory_character ON inventory_items(character_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_dialogue_character_npc ON dialogue_history(character_id, npc_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_dialogue_timestamp ON dialogue_history(timestamp DESC)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_chat_commands_user ON chat_commands_log(user_id, timestamp DESC)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_notification_queue_character ON notification_queue(target_character_id, created_at DESC)',
+    );
 
     _logger.i('Database tables created successfully');
 
@@ -309,7 +319,9 @@ class DatabaseHelper {
 
     try {
       // Load fellowship members (NPCs)
-      final npcsJson = await rootBundle.loadString('assets/data/seed/npcs.json');
+      final npcsJson = await rootBundle.loadString(
+        'assets/data/seed/npcs.json',
+      );
       final npcsData = json.decode(npcsJson);
       final fellowshipMembers = npcsData['fellowship_members'] as List;
 
@@ -330,7 +342,9 @@ class DatabaseHelper {
       _logger.i('Loaded ${fellowshipMembers.length} fellowship members');
 
       // Load quests
-      final questsJson = await rootBundle.loadString('assets/data/seed/quests.json');
+      final questsJson = await rootBundle.loadString(
+        'assets/data/seed/quests.json',
+      );
       final questsData = json.decode(questsJson);
       final quests = questsData['quests'] as List;
 

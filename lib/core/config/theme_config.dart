@@ -12,7 +12,9 @@ class GreenlandsTheme {
   static const Color successGreen = Color(0xFF32CD32); // Lime green
   static const Color textPrimary = Color(0xFFFFFFFF); // White
   static const Color textSecondary = Color(0xFFB0B0B0); // Light gray
-  static const Color borderColor = Color(0xFFFFFFFF); // White borders for pixel art effect
+  static const Color borderColor = Color(
+    0xFFFFFFFF,
+  ); // White borders for pixel art effect
 
   static ThemeData get darkTheme {
     return ThemeData(
@@ -133,9 +135,7 @@ class GreenlandsTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: accentGold,
           side: const BorderSide(color: accentGold, width: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           textStyle: const TextStyle(
             fontFamily: 'Courier New',
@@ -261,10 +261,7 @@ class GreenlandsTheme {
       ),
 
       // Icon theme
-      iconTheme: const IconThemeData(
-        color: accentGold,
-        size: 24,
-      ),
+      iconTheme: const IconThemeData(color: accentGold, size: 24),
     );
   }
 

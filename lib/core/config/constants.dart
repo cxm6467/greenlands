@@ -92,14 +92,11 @@ class GameBalanceConfig {
 
   /// Calculate XP reward for a quest based on difficulty and player level
   static int calculateQuestXpReward(String difficulty, int playerLevel) {
-    final baseReward = {
-      'easy': 50,
-      'medium': 100,
-      'hard': 200,
-    }[difficulty] ??
-        100;
+    final baseReward =
+        {'easy': 50, 'medium': 100, 'hard': 200}[difficulty] ?? 100;
 
-    final multiplier = GameConstants.QUEST_DIFFICULTY_XP_MULTIPLIERS[difficulty] ?? 1.0;
+    final multiplier =
+        GameConstants.QUEST_DIFFICULTY_XP_MULTIPLIERS[difficulty] ?? 1.0;
     final levelBonus = 1 + (playerLevel * 0.1);
 
     return (baseReward * multiplier * levelBonus).toInt();

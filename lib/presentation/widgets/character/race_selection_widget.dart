@@ -26,15 +26,20 @@ class RaceSelectionWidget extends ConsumerWidget {
             child: ListView(
               children: CharacterRace.values.map((race) {
                 final isSelected = selectedRace == race;
-                final statBonuses = GameConstants.RACE_STAT_BONUSES[race.displayName] ?? {};
+                final statBonuses =
+                    GameConstants.RACE_STAT_BONUSES[race.displayName] ?? {};
 
                 return Card(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.2)
                       : null,
                   child: InkWell(
                     onTap: () {
-                      ref.read(characterCreationProvider.notifier).setRace(race);
+                      ref
+                          .read(characterCreationProvider.notifier)
+                          .setRace(race);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -61,7 +66,8 @@ class RaceSelectionWidget extends ConsumerWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Bonuses: ${_formatStatBonuses(statBonuses)}',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.green,
                                       ),

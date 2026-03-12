@@ -66,10 +66,12 @@ class CharacterModel {
       id: id,
       name: name,
       race: CharacterRace.values.firstWhere((e) => e.name == race),
-      characterClass:
-          CharacterClass.values.firstWhere((e) => e.name == characterClass),
-      fellowshipRole:
-          FellowshipRole.values.firstWhere((e) => e.name == fellowshipRole),
+      characterClass: CharacterClass.values.firstWhere(
+        (e) => e.name == characterClass,
+      ),
+      fellowshipRole: FellowshipRole.values.firstWhere(
+        (e) => e.name == fellowshipRole,
+      ),
       level: level,
       currentXp: currentXp,
       xpToNextLevel: xpToNextLevel,

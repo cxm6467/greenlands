@@ -6,7 +6,8 @@ class StatAllocationWidget extends ConsumerStatefulWidget {
   const StatAllocationWidget({super.key});
 
   @override
-  ConsumerState<StatAllocationWidget> createState() => _StatAllocationWidgetState();
+  ConsumerState<StatAllocationWidget> createState() =>
+      _StatAllocationWidgetState();
 }
 
 class _StatAllocationWidgetState extends ConsumerState<StatAllocationWidget> {
@@ -40,7 +41,9 @@ class _StatAllocationWidgetState extends ConsumerState<StatAllocationWidget> {
 
     setState(() {
       _allocations[stat] = newValue;
-      ref.read(characterCreationProvider.notifier).setAllocatedStats(_allocations);
+      ref
+          .read(characterCreationProvider.notifier)
+          .setAllocatedStats(_allocations);
     });
   }
 
@@ -65,16 +68,16 @@ class _StatAllocationWidgetState extends ConsumerState<StatAllocationWidget> {
                   Text(
                     'Points Remaining: $_remainingPoints / $maxPoints',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: _remainingPoints == 0 ? Colors.green : null,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: _remainingPoints == 0 ? Colors.green : null,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   if (_remainingPoints > 0)
                     Text(
                       'Allocate all points to continue',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.orange,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.orange),
                     ),
                 ],
               ),
@@ -164,21 +167,28 @@ class _StatAllocationWidgetState extends ConsumerState<StatAllocationWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: value > 0 ? () => _updateAllocation(statKey, -1) : null,
+                  onPressed: value > 0
+                      ? () => _updateAllocation(statKey, -1)
+                      : null,
                   icon: const Icon(Icons.remove_circle),
                   iconSize: 32,
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     '+$value',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 IconButton(

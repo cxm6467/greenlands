@@ -26,15 +26,22 @@ class ClassSelectionWidget extends ConsumerWidget {
             child: ListView(
               children: CharacterClass.values.map((characterClass) {
                 final isSelected = selectedClass == characterClass;
-                final baseStats = GameConstants.CLASS_BASE_STATS[characterClass.displayName] ?? {};
+                final baseStats =
+                    GameConstants.CLASS_BASE_STATS[characterClass
+                        .displayName] ??
+                    {};
 
                 return Card(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.2)
                       : null,
                   child: InkWell(
                     onTap: () {
-                      ref.read(characterCreationProvider.notifier).setClass(characterClass);
+                      ref
+                          .read(characterCreationProvider.notifier)
+                          .setClass(characterClass);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -61,9 +68,8 @@ class ClassSelectionWidget extends ConsumerWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Base Stats: ${_formatBaseStats(baseStats)}',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -86,7 +92,10 @@ class ClassSelectionWidget extends ConsumerWidget {
   String _formatBaseStats(Map<String, int> stats) {
     final order = ['strength', 'agility', 'wisdom', 'constitution'];
     return order
-        .map((stat) => '${stat.toUpperCase().substring(0, 3)}: ${stats[stat] ?? 0}')
+        .map(
+          (stat) =>
+              '${stat.toUpperCase().substring(0, 3)}: ${stats[stat] ?? 0}',
+        )
         .join(', ');
   }
 }

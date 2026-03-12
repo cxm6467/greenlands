@@ -28,11 +28,15 @@ class FellowshipRoleWidget extends ConsumerWidget {
 
                 return Card(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.2)
                       : null,
                   child: InkWell(
                     onTap: () {
-                      ref.read(characterCreationProvider.notifier).setFellowshipRole(role);
+                      ref
+                          .read(characterCreationProvider.notifier)
+                          .setFellowshipRole(role);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),

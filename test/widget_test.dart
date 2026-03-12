@@ -11,7 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:the_shire/main.dart';
 
 void main() {
-  testWidgets('App starts and shows splash screen', (WidgetTester tester) async {
+  testWidgets('App starts and shows splash screen', (
+    WidgetTester tester,
+  ) async {
     // TODO: Implement proper tests
     // Build our app and trigger a frame.
     // await tester.pumpWidget(const ShireApp());
