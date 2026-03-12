@@ -122,7 +122,7 @@ class AppConfig {
     Game Config:
     - Max Fellowship Size: $maxFellowshipSize
     - XP Multiplier: ${xpMultiplier}x
-    - Daily Quest Reset: ${dailyQuestResetHour}:00
+    - Daily Quest Reset: $dailyQuestResetHour:00
     - Debug Mode: ${debugMode ? "ON" : "OFF"}
     ==============================
     ''';
