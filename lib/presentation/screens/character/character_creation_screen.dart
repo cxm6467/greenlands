@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/theme_config.dart';
-import '../../../domain/entities/character.dart';
 import '../../providers/character_provider.dart';
 import '../../widgets/character/class_selection_widget.dart';
 import '../../widgets/character/fellowship_role_widget.dart';

@@ -30,7 +30,7 @@ class RaceSelectionWidget extends ConsumerWidget {
 
                 return Card(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                       : null,
                   child: InkWell(
                     onTap: () {
