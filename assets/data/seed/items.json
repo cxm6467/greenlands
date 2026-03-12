@@ -1,0 +1,112 @@
+{
+  "items": [
+    {
+      "id": "item_001",
+      "item_name": "Wooden Walking Stick",
+      "item_type": "weapon",
+      "description": "A simple walking stick, suitable for a beginning adventurer. Better than bare hands!",
+      "stat_modifiers": {"strength": 2},
+      "rarity": "common",
+      "emoji_icon": "🥖"
+    },
+    {
+      "id": "item_002",
+      "item_name": "Leather Vest",
+      "item_type": "armor",
+      "description": "Basic leather protection for your journey. Provides modest defense against blows.",
+      "stat_modifiers": {"constitution": 3},
+      "rarity": "common",
+      "emoji_icon": "🦺"
+    },
+    {
+      "id": "item_003",
+      "item_name": "Elven Waybread",
+      "item_type": "consumable",
+      "description": "Magical waybread that restores vitality. One small bite is enough to sustain a traveler for a day.",
+      "stat_modifiers": {},
+      "rarity": "uncommon",
+      "emoji_icon": "🍞"
+    },
+    {
+      "id": "item_004",
+      "item_name": "Map of the Greenlands",
+      "item_type": "quest_item",
+      "description": "An old map showing the paths through peaceful lands. Essential for any journey beyond home.",
+      "stat_modifiers": {},
+      "rarity": "common",
+      "emoji_icon": "🗺️"
+    },
+    {
+      "id": "item_005",
+      "item_name": "Silken Rope",
+      "item_type": "misc",
+      "description": "Light but strong rope woven by skilled craftsmen. It never tangles and always finds a good hold.",
+      "stat_modifiers": {"agility": 1},
+      "rarity": "uncommon",
+      "emoji_icon": "🪢"
+    },
+    {
+      "id": "item_006",
+      "item_name": "Lumina's Crystal Phial",
+      "item_type": "quest_item",
+      "description": "A crystal phial filled with captured starlight. It shines brightest in dark places.",
+      "stat_modifiers": {"wisdom": 5},
+      "rarity": "legendary",
+      "emoji_icon": "💎"
+    },
+    {
+      "id": "item_007",
+      "item_name": "Moonblade",
+      "item_type": "weapon",
+      "description": "An ancient blade that glows blue when enemies are near. Light and deadly sharp.",
+      "stat_modifiers": {"strength": 5, "agility": 3},
+      "rarity": "rare",
+      "emoji_icon": "🗡️"
+    },
+    {
+      "id": "item_008",
+      "item_name": "Silvermail Shirt",
+      "item_type": "armor",
+      "description": "A shirt of magical mail, light as silk but harder than steel. Forged by ancient smiths.",
+      "stat_modifiers": {"constitution": 10, "agility": 2},
+      "rarity": "legendary",
+      "emoji_icon": "🛡️"
+    },
+    {
+      "id": "item_009",
+      "item_name": "Pipe-weed Pouch",
+      "item_type": "consumable",
+      "description": "Fine tobacco from the valley. Calms the nerves and sharpens the mind.",
+      "stat_modifiers": {"wisdom": 1},
+      "rarity": "common",
+      "emoji_icon": "🍃"
+    },
+    {
+      "id": "item_010",
+      "item_name": "Wanderer's Cloak",
+      "item_type": "armor",
+      "description": "A weathered cloak that blends with the surroundings. Worn by travelers of the wild.",
+      "stat_modifiers": {"agility": 4, "wisdom": 2},
+      "rarity": "uncommon",
+      "emoji_icon": "🧥"
+    },
+    {
+      "id": "item_011",
+      "item_name": "Healing Herb",
+      "item_type": "consumable",
+      "description": "A rare healing herb with restorative powers known to skilled healers.",
+      "stat_modifiers": {"constitution": 2},
+      "rarity": "uncommon",
+      "emoji_icon": "🌿"
+    },
+    {
+      "id": "item_012",
+      "item_name": "Ancient Dagger",
+      "item_type": "weapon",
+      "description": "An old dagger from a forgotten age, still sharp and effective in battle.",
+      "stat_modifiers": {"strength": 4, "wisdom": 2},
+      "rarity": "rare",
+      "emoji_icon": "🔪"
+    }
+  ]
+}

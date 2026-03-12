@@ -1,0 +1,70 @@
+{
+  "fellowship_members": [
+    {
+      "id": "merlon",
+      "name": "Merlon the Gray (not Gandalf, definitely not)",
+      "race": "Ancient",
+      "class": "Wizard",
+      "description": "A wise wizard who definitely didn't arrive precisely when he meant to. His knowledge of the Greenlands is vast, though he claims it's 'all just a trick of the light.'",
+      "personality_traits": ["wise", "mysterious", "patient", "powerful", "slightly theatrical"],
+      "relationship_level": 50,
+      "is_unlocked": 1,
+      "avatar_emoji": "🧙"
+    },
+    {
+      "id": "bilby",
+      "name": "Bilby Tookish (rhymes with Frodo-ish)",
+      "race": "Halfling",
+      "class": "Bearer",
+      "description": "The brave halfling carrying the Ancient Artifact (which is definitely NOT a ring, more of a... circular thingy). Despite his small size, his courage is immense. Has surprisingly hairy feet.",
+      "personality_traits": ["brave", "humble", "determined", "kind", "second-breakfast enthusiast"],
+      "relationship_level": 60,
+      "is_unlocked": 1,
+      "avatar_emoji": "🧝"
+    },
+    {
+      "id": "hamwise",
+      "name": "Hamwise Greenthumb (the Samwise to my Frodo)",
+      "race": "Halfling",
+      "class": "Companion",
+      "description": "Bilby's loyal friend and gardener. Loves potatoes in ALL their forms. Will NOT let Bilby go alone, that's for dang sure. His practical wisdom rivals only his love of cooking.",
+      "personality_traits": ["loyal", "optimistic", "practical", "brave", "potato connoisseur"],
+      "relationship_level": 70,
+      "is_unlocked": 1,
+      "avatar_emoji": "🌱"
+    },
+    {
+      "id": "thornking",
+      "name": "Thornking (Strider? I barely know her!)",
+      "race": "Human",
+      "class": "Ranger",
+      "description": "The rightful heir to the Southern Throne, living as a ranger because kingdoms don't manage themselves... wait, yes they do. A natural leader who's really good at brooding dramatically.",
+      "personality_traits": ["noble", "tactical", "courageous", "humble", "master brooder"],
+      "relationship_level": 45,
+      "is_unlocked": 1,
+      "avatar_emoji": "⚔️"
+    },
+    {
+      "id": "silvereye",
+      "name": "Silvereye (the Legolas-esque one)",
+      "race": "Elf",
+      "class": "Archer",
+      "description": "An elven prince and master archer from the Darkwood. His keen eyes can count enemies from miles away (it's 43!). Known for his impossible skateboard tricks... er, shield-sliding techniques.",
+      "personality_traits": ["graceful", "perceptive", "skilled", "loyal", "impossibly coordinated"],
+      "relationship_level": 40,
+      "is_unlocked": 1,
+      "avatar_emoji": "🏹"
+    },
+    {
+      "id": "lumina",
+      "name": "Lumina the Seer (Galadriel-adjacent)",
+      "race": "Elf",
+      "class": "Lady of Light",
+      "description": "The powerful and ancient Lady of Silverwood. Her wisdom spans ages, and her crystal reveals truths (it's basically a Magic 8-Ball but fancier). Speaks cryptically because straightforward answers are so last age.",
+      "personality_traits": ["wise", "mystical", "powerful", "ancient", "speaks in riddles on purpose"],
+      "relationship_level": 30,
+      "is_unlocked": 1,
+      "avatar_emoji": "🔮"
+    }
+  ]
+}

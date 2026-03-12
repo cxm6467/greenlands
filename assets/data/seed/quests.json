@@ -1,0 +1,177 @@
+{
+  "quests": [
+    {
+      "id": "quest_001",
+      "title": "The Grand Celebration",
+      "description": "Help prepare for Old Bilby's birthday celebration in the Greenlands. Gather supplies and invite fellow halflings to this momentous occasion.",
+      "quest_type": "main",
+      "difficulty": "easy",
+      "status": "available",
+      "xp_reward": 100,
+      "objectives": [
+        {"text": "Gather firewood from the forest", "completed": false},
+        {"text": "Deliver invitations to 5 halflings", "completed": false},
+        {"text": "Meet with Merlon at Hillside Manor", "completed": false}
+      ],
+      "required_level": 1,
+      "prerequisites": [],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_002",
+      "title": "Shadow of the Ancients",
+      "description": "Merlon has returned with urgent news about the ancient artifact. The shadow of an ancient evil stirs once more.",
+      "quest_type": "main",
+      "difficulty": "medium",
+      "status": "available",
+      "xp_reward": 200,
+      "objectives": [
+        {"text": "Speak with Merlon about the artifact", "completed": false},
+        {"text": "Test the artifact's power", "completed": false},
+        {"text": "Decide what to do with the artifact", "completed": false}
+      ],
+      "required_level": 2,
+      "prerequisites": ["quest_001"],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_003",
+      "title": "Journey to Crossroads",
+      "description": "Travel to the town of Crossroads to meet with Merlon. The journey through the Old Woods is fraught with danger.",
+      "quest_type": "main",
+      "difficulty": "medium",
+      "status": "available",
+      "xp_reward": 250,
+      "objectives": [
+        {"text": "Prepare supplies for the journey", "completed": false},
+        {"text": "Recruit Hamwise and companions", "completed": false},
+        {"text": "Reach the Wanderer's Inn", "completed": false},
+        {"text": "Meet the mysterious ranger", "completed": false}
+      ],
+      "required_level": 3,
+      "prerequisites": ["quest_002"],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_004",
+      "title": "Lost in the Old Woods",
+      "description": "A halfling child has wandered into the dangerous Old Woods. The trees there are... awake.",
+      "quest_type": "side",
+      "difficulty": "easy",
+      "status": "available",
+      "xp_reward": 150,
+      "objectives": [
+        {"text": "Search the Old Woods for clues", "completed": false},
+        {"text": "Find the lost child", "completed": false},
+        {"text": "Return the child safely", "completed": false}
+      ],
+      "required_level": 1,
+      "prerequisites": [],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_005",
+      "title": "Secrets of the Ancients",
+      "description": "Consult Lumina's crystal to learn about the history of ancient magic and dark forces.",
+      "quest_type": "side",
+      "difficulty": "easy",
+      "status": "available",
+      "xp_reward": 120,
+      "objectives": [
+        {"text": "Visit Lumina's Crystal", "completed": false},
+        {"text": "Ask about ancient powers", "completed": false},
+        {"text": "Learn about the shadow lord", "completed": false}
+      ],
+      "required_level": 2,
+      "prerequisites": [],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_006",
+      "title": "The Great Council",
+      "description": "Attend the great council in the Northern Valley where the fate of the artifact will be decided.",
+      "quest_type": "main",
+      "difficulty": "hard",
+      "status": "available",
+      "xp_reward": 300,
+      "objectives": [
+        {"text": "Travel to the Northern Valley", "completed": false},
+        {"text": "Attend the council meeting", "completed": false},
+        {"text": "Volunteer for the quest", "completed": false},
+        {"text": "Form the Company", "completed": false}
+      ],
+      "required_level": 4,
+      "prerequisites": ["quest_003"],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_007",
+      "title": "Daily: Patrol the Greenlands",
+      "description": "Keep watch over the peaceful lands of the Greenlands. You never know what dangers might lurk in the shadows.",
+      "quest_type": "daily",
+      "difficulty": "easy",
+      "status": "available",
+      "xp_reward": 80,
+      "objectives": [
+        {"text": "Walk the borders of the Greenlands", "completed": false},
+        {"text": "Report any suspicious activity", "completed": false}
+      ],
+      "required_level": 1,
+      "prerequisites": [],
+      "is_generated": 0,
+      "recurrence_rule": "FREQ=DAILY;INTERVAL=1"
+    },
+    {
+      "id": "quest_008",
+      "title": "The Gift of Light",
+      "description": "Lumina wishes to bestow upon you a gift. Seek her wisdom and accept her blessing.",
+      "quest_type": "side",
+      "difficulty": "medium",
+      "status": "available",
+      "xp_reward": 180,
+      "objectives": [
+        {"text": "Speak with Lumina in Silverwood", "completed": false},
+        {"text": "Receive her blessing", "completed": false},
+        {"text": "Accept a gift of her choosing", "completed": false}
+      ],
+      "required_level": 3,
+      "prerequisites": [],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_009",
+      "title": "Into the Deep Caverns",
+      "description": "The Company must pass through the ancient caverns beneath the mountains. Darkness and danger await in the deep.",
+      "quest_type": "main",
+      "difficulty": "hard",
+      "status": "available",
+      "xp_reward": 350,
+      "objectives": [
+        {"text": "Find the entrance to the caverns", "completed": false},
+        {"text": "Speak the password", "completed": false},
+        {"text": "Navigate the dark passages", "completed": false},
+        {"text": "Reach the Great Bridge", "completed": false}
+      ],
+      "required_level": 5,
+      "prerequisites": ["quest_006"],
+      "is_generated": 0
+    },
+    {
+      "id": "quest_010",
+      "title": "Weekly: Company Gathering",
+      "description": "Strengthen the bonds of the Company by gathering with your companions and sharing stories of your adventures.",
+      "quest_type": "daily",
+      "difficulty": "easy",
+      "status": "available",
+      "xp_reward": 150,
+      "objectives": [
+        {"text": "Speak with at least 3 company members", "completed": false},
+        {"text": "Share your recent experiences", "completed": false}
+      ],
+      "required_level": 1,
+      "prerequisites": [],
+      "is_generated": 0,
+      "recurrence_rule": "FREQ=WEEKLY;BYDAY=SU"
+    }
+  ]
+}
