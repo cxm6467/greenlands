@@ -37,11 +37,20 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage to Codecov (PR, tokenless)
+        if: github.event_name == 'pull_request'
+        uses: codecov/codecov-action@v5
         with:
-          file: coverage/lcov.info
+          files: coverage/lcov.info
           fail_ci_if_error: false
+
+      - name: Upload coverage to Codecov (push)
+        if: github.event_name == 'push'
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage/lcov.info
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build:
     name: Build Web App
