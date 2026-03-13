@@ -54,10 +54,7 @@ class AppConfig {
       final storedClaudeApiKey = _settingsStorage != null
           ? await _settingsStorage!.getClaudeApiKey()
           : null;
-      claudeApiKey =
-          storedClaudeApiKey ??
-          dotenv.env['CLAUDE_API_KEY'] ??
-          '';
+      claudeApiKey = storedClaudeApiKey ?? dotenv.env['CLAUDE_API_KEY'] ?? '';
       claudeModel =
           _settingsStorage?.getClaudeModel() ??
           dotenv.env['CLAUDE_MODEL'] ??
@@ -79,9 +76,7 @@ class AppConfig {
           ? await _settingsStorage!.getDiscordBotToken()
           : null;
       discordBotToken =
-          storedDiscordBotToken ??
-          dotenv.env['DISCORD_BOT_TOKEN'] ??
-          '';
+          storedDiscordBotToken ?? dotenv.env['DISCORD_BOT_TOKEN'] ?? '';
       slackAppToken =
           await _settingsStorage?.getSlackAppToken() ??
           dotenv.env['SLACK_APP_TOKEN'] ??

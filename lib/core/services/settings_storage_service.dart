@@ -47,8 +47,8 @@ class SettingsStorageService {
     // Bcrypt hashes are typically 60 characters and start with $2a$, $2b$, or $2y$
     return value.length == 60 &&
         (value.startsWith(r'$2a$') ||
-         value.startsWith(r'$2b$') ||
-         value.startsWith(r'$2y$'));
+            value.startsWith(r'$2b$') ||
+            value.startsWith(r'$2y$'));
   }
 
   /// Check if an admin password has been set

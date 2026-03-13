@@ -154,9 +154,7 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
       await AppConfig.load();
       if (!mounted) return;
 
-      _showSuccess(
-        'Settings saved and applied successfully.',
-      );
+      _showSuccess('Settings saved and applied successfully.');
     } catch (e) {
       if (!mounted) return;
       _showError('Failed to save settings: $e');
