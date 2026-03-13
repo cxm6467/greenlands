@@ -100,6 +100,7 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
       await ref
           .read(settingsAuthProvider.notifier)
           .setPassword(_passwordController.text);
+      if (!mounted) return;
       setState(() {
         _isAuthenticated = true;
         _hasPassword = true;
@@ -110,6 +111,7 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
       final isValid = await ref
           .read(settingsAuthProvider.notifier)
           .checkPassword(_passwordController.text);
+      if (!mounted) return;
       if (isValid) {
         setState(() {
           _isAuthenticated = true;
@@ -149,11 +151,13 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
 
       // Reload AppConfig
       await AppConfig.load();
+      if (!mounted) return;
 
       _showSuccess(
         'Settings saved successfully! Restart app to apply changes.',
       );
     } catch (e) {
+      if (!mounted) return;
       _showError('Failed to save settings: $e');
     }
   }
