@@ -208,7 +208,9 @@ void validateDependencies() {
     }
   }
 
-  _logger.i('✓ All ${requiredDependencies.length} required dependencies validated');
+  _logger.i(
+    '✓ All ${requiredDependencies.length} required dependencies validated',
+  );
 }
 
 /// Reset all dependencies (useful for testing)
