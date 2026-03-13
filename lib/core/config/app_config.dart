@@ -51,8 +51,11 @@ class AppConfig {
       // Priority: Stored settings > .env > defaults
 
       // Load API keys (stored > .env > default)
+      final storedClaudeApiKey = _settingsStorage != null
+          ? await _settingsStorage!.getClaudeApiKey()
+          : null;
       claudeApiKey =
-          await _settingsStorage?.getClaudeApiKey() ??
+          storedClaudeApiKey ??
           dotenv.env['CLAUDE_API_KEY'] ??
           '';
       claudeModel =
@@ -65,12 +68,18 @@ class AppConfig {
           _settingsStorage?.getMcpServerUrl() ??
           dotenv.env['MCP_SERVER_URL'] ??
           'http://localhost:3000';
+      final storedGoogleChatWebhook = _settingsStorage != null
+          ? await _settingsStorage!.getGoogleChatWebhook()
+          : null;
       googleChatWebhookUrl =
-          await _settingsStorage?.getGoogleChatWebhook() ??
+          storedGoogleChatWebhook ??
           dotenv.env['GOOGLE_CHAT_WEBHOOK_URL'] ??
           '';
+      final storedDiscordBotToken = _settingsStorage != null
+          ? await _settingsStorage!.getDiscordBotToken()
+          : null;
       discordBotToken =
-          await _settingsStorage?.getDiscordBotToken() ??
+          storedDiscordBotToken ??
           dotenv.env['DISCORD_BOT_TOKEN'] ??
           '';
       slackAppToken =
