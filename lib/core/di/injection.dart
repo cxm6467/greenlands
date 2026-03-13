@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/database_helper.dart';
+import '../services/settings_storage_service.dart';
 import '../../data/repositories/character_repository_impl.dart';
 import '../../data/repositories/web/character_repository_web.dart';
 import '../../domain/repositories/character_repository.dart';
@@ -25,6 +28,24 @@ Future<void> setupDependencies() async {
 
   // Logger
   getIt.registerLazySingleton<Logger>(() => Logger());
+
+  // Settings Storage (works on all platforms)
+  final sharedPrefs = await SharedPreferences.getInstance();
+  getIt.registerSingleton<SharedPreferences>(sharedPrefs);
+
+  const secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
+  getIt.registerSingleton<FlutterSecureStorage>(secureStorage);
+
+  getIt.registerSingleton<SettingsStorageService>(
+    SettingsStorageService(
+      secureStorage: secureStorage,
+      prefs: sharedPrefs,
+      logger: getIt<Logger>(),
+    ),
+  );
+  _logger.i('Settings storage initialized');
 
   // Database (skip on web - SQLite doesn't work in browsers)
   if (!kIsWeb) {

@@ -5,8 +5,10 @@ import 'package:logger/logger.dart';
 import 'core/config/app_config.dart';
 import 'core/config/theme_config.dart';
 import 'core/di/injection.dart';
+import 'core/services/settings_storage_service.dart';
 import 'presentation/providers/character_provider.dart';
 import 'presentation/screens/character/character_creation_screen.dart';
+import 'presentation/screens/settings/admin_settings_screen.dart';
 
 final _logger = Logger();
 
@@ -16,12 +18,15 @@ void main() async {
   try {
     _logger.i('🏰 Starting The Greenlands...');
 
-    // Load configuration
+    // Setup dependency injection first (includes settings storage)
+    await setupDependencies();
+
+    // Initialize AppConfig with settings storage
+    AppConfig.setSettingsStorage(getIt<SettingsStorageService>());
+
+    // Load configuration (will use stored settings if available)
     await AppConfig.load();
     _logger.i(AppConfig.getConfigSummary());
-
-    // Setup dependency injection
-    await setupDependencies();
 
     // Validate all required dependencies are registered
     validateDependencies();
@@ -242,6 +247,15 @@ class WelcomeScreen extends ConsumerWidget {
           ),
         ),
         actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const AdminSettingsScreen()),
+              );
+            },
+            child: const Text('ADMIN SETTINGS'),
+          ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('CLOSE'),

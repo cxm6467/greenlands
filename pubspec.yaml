@@ -44,6 +44,8 @@ dependencies:
 
   # Configuration
   flutter_dotenv: ^5.1.0
+  shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
 
   # Dependency injection
   get_it: ^7.6.4

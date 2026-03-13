@@ -1,8 +1,11 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 
+import '../services/settings_storage_service.dart';
+
 class AppConfig {
   static final _logger = Logger();
+  static SettingsStorageService? _settingsStorage;
 
   // Anthropic Claude API
   static String claudeApiKey = '';
@@ -26,6 +29,11 @@ class AppConfig {
   static int dailyQuestResetHour = 0;
   static bool debugMode = true;
 
+  /// Initialize settings storage (call before load())
+  static void setSettingsStorage(SettingsStorageService settingsStorage) {
+    _settingsStorage = settingsStorage;
+  }
+
   static Future<void> load() async {
     try {
       _logger.i('Loading app configuration...');
@@ -40,41 +48,75 @@ class AppConfig {
         _logger.w('This is normal for web builds');
       }
 
-      // Load API keys
-      claudeApiKey = dotenv.env['CLAUDE_API_KEY'] ?? '';
-      claudeModel = dotenv.env['CLAUDE_MODEL'] ?? 'claude-3-5-sonnet-20241022';
+      // Priority: Stored settings > .env > defaults
+
+      // Load API keys (stored > .env > default)
+      final storedClaudeApiKey = _settingsStorage != null
+          ? await _settingsStorage!.getClaudeApiKey()
+          : null;
+      claudeApiKey = storedClaudeApiKey ?? dotenv.env['CLAUDE_API_KEY'] ?? '';
+      claudeModel =
+          _settingsStorage?.getClaudeModel() ??
+          dotenv.env['CLAUDE_MODEL'] ??
+          'claude-3-5-sonnet-20241022';
 
       // Load MCP Server config
-      mcpServerUrl = dotenv.env['MCP_SERVER_URL'] ?? 'http://localhost:3000';
-      googleChatWebhookUrl = dotenv.env['GOOGLE_CHAT_WEBHOOK_URL'] ?? '';
-      discordBotToken = dotenv.env['DISCORD_BOT_TOKEN'] ?? '';
-      slackAppToken = dotenv.env['SLACK_APP_TOKEN'] ?? '';
+      mcpServerUrl =
+          _settingsStorage?.getMcpServerUrl() ??
+          dotenv.env['MCP_SERVER_URL'] ??
+          'http://localhost:3000';
+      final storedGoogleChatWebhook = _settingsStorage != null
+          ? await _settingsStorage!.getGoogleChatWebhook()
+          : null;
+      googleChatWebhookUrl =
+          storedGoogleChatWebhook ??
+          dotenv.env['GOOGLE_CHAT_WEBHOOK_URL'] ??
+          '';
+      final storedDiscordBotToken = _settingsStorage != null
+          ? await _settingsStorage!.getDiscordBotToken()
+          : null;
+      discordBotToken =
+          storedDiscordBotToken ?? dotenv.env['DISCORD_BOT_TOKEN'] ?? '';
+      slackAppToken =
+          await _settingsStorage?.getSlackAppToken() ??
+          dotenv.env['SLACK_APP_TOKEN'] ??
+          '';
 
       // Load feature flags
-      enableQuestGeneration = _parseBool(
-        dotenv.env['ENABLE_QUEST_GENERATION'],
-        true,
-      );
-      enableChatBots = _parseBool(dotenv.env['ENABLE_CHAT_BOTS'], false);
-      enableNotifications = _parseBool(
-        dotenv.env['ENABLE_NOTIFICATIONS'],
-        true,
-      );
-      enableRecurringEvents = _parseBool(
-        dotenv.env['ENABLE_RECURRING_EVENTS'],
-        true,
-      );
+      enableQuestGeneration =
+          _settingsStorage?.getEnableQuestGeneration() ??
+          _parseBool(dotenv.env['ENABLE_QUEST_GENERATION'], true);
+      enableChatBots =
+          _settingsStorage?.getEnableChatBots() ??
+          _parseBool(dotenv.env['ENABLE_CHAT_BOTS'], false);
+      enableNotifications =
+          _settingsStorage?.getEnableNotifications() ??
+          _parseBool(dotenv.env['ENABLE_NOTIFICATIONS'], true);
+      enableRecurringEvents =
+          _settingsStorage?.getEnableRecurringEvents() ??
+          _parseBool(dotenv.env['ENABLE_RECURRING_EVENTS'], true);
 
       // Load game config
       maxFellowshipSize =
-          int.tryParse(dotenv.env['MAX_FELLOWSHIP_SIZE'] ?? '8') ?? 8;
+          _settingsStorage?.getMaxFellowshipSize() ??
+          int.tryParse(dotenv.env['MAX_FELLOWSHIP_SIZE'] ?? '8') ??
+          8;
       xpMultiplier =
-          double.tryParse(dotenv.env['XP_MULTIPLIER'] ?? '1.0') ?? 1.0;
+          _settingsStorage?.getXpMultiplier() ??
+          double.tryParse(dotenv.env['XP_MULTIPLIER'] ?? '1.0') ??
+          1.0;
       dailyQuestResetHour =
-          int.tryParse(dotenv.env['DAILY_QUEST_RESET_HOUR'] ?? '0') ?? 0;
-      debugMode = _parseBool(dotenv.env['DEBUG_MODE'], true);
+          _settingsStorage?.getDailyQuestResetHour() ??
+          int.tryParse(dotenv.env['DAILY_QUEST_RESET_HOUR'] ?? '0') ??
+          0;
+      debugMode =
+          _settingsStorage?.getDebugMode() ??
+          _parseBool(dotenv.env['DEBUG_MODE'], true);
 
       _logger.i('App configuration loaded successfully');
+      _logger.i(
+        'Settings source: ${_settingsStorage != null ? "Stored + .env + defaults" : ".env + defaults"}',
+      );
 
       // Validate critical configuration
       _validate();
