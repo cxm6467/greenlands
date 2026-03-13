@@ -16,6 +16,7 @@ final _logger = Logger();
 
 Future<void> setupDependencies() async {
   _logger.i('Setting up dependency injection...');
+  _logger.i('Running on web: $kIsWeb');
 
   // ============================================================================
   // CORE DEPENDENCIES
