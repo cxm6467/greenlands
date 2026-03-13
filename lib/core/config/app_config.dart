@@ -30,7 +30,15 @@ class AppConfig {
     try {
       _logger.i('Loading app configuration...');
 
-      await dotenv.load(fileName: '.env');
+      // Try to load .env file, but don't fail if it doesn't exist
+      // (especially important for web builds where .env isn't deployed)
+      try {
+        await dotenv.load(fileName: '.env');
+        _logger.i('.env file loaded successfully');
+      } catch (e) {
+        _logger.w('.env file not found, using default configuration');
+        _logger.w('This is normal for web builds');
+      }
 
       // Load API keys
       claudeApiKey = dotenv.env['CLAUDE_API_KEY'] ?? '';
@@ -72,9 +80,7 @@ class AppConfig {
       _validate();
     } catch (e) {
       _logger.e('Error loading app configuration: $e');
-      throw Exception(
-        'Failed to load app configuration. Make sure .env file exists.',
-      );
+      throw Exception('Failed to load app configuration: $e');
     }
   }
 
