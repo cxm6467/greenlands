@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bcrypt/bcrypt.dart';
 
 /// Service for storing and retrieving app settings
 ///
@@ -42,6 +43,14 @@ class SettingsStorageService {
   // AUTHENTICATION
   // ============================================================================
 
+  bool _isBcryptHash(String value) {
+    // Bcrypt hashes are typically 60 characters and start with $2a$, $2b$, or $2y$
+    return value.length == 60 &&
+        (value.startsWith(r'$2a$') ||
+         value.startsWith(r'$2b$') ||
+         value.startsWith(r'$2y$'));
+  }
+
   /// Check if an admin password has been set
   Future<bool> hasAdminPassword() async {
     try {
@@ -56,7 +65,9 @@ class SettingsStorageService {
   /// Set the admin password for settings access
   Future<void> setAdminPassword(String password) async {
     try {
-      await _secureStorage.write(key: _keyAdminPassword, value: password);
+      // Hash the password with bcrypt before storing it
+      final hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+      await _secureStorage.write(key: _keyAdminPassword, value: hashedPassword);
       _logger.i('Admin password set successfully');
     } catch (e) {
       _logger.e('Error setting admin password: $e');
@@ -68,7 +79,27 @@ class SettingsStorageService {
   Future<bool> verifyAdminPassword(String password) async {
     try {
       final storedPassword = await _secureStorage.read(key: _keyAdminPassword);
-      return storedPassword == password;
+      if (storedPassword == null || storedPassword.isEmpty) {
+        return false;
+      }
+
+      // If the stored value is a bcrypt hash, verify using bcrypt
+      if (_isBcryptHash(storedPassword)) {
+        return BCrypt.checkpw(password, storedPassword);
+      }
+
+      // Backward compatibility: handle legacy plaintext-stored passwords
+      final matchesLegacy = storedPassword == password;
+      if (matchesLegacy) {
+        try {
+          // Migrate to a bcrypt hash on successful verification
+          await setAdminPassword(password);
+          _logger.i('Admin password migrated to hashed storage');
+        } catch (e) {
+          _logger.e('Error migrating admin password to hashed storage: $e');
+        }
+      }
+      return matchesLegacy;
     } catch (e) {
       _logger.e('Error verifying admin password: $e');
       return false;
