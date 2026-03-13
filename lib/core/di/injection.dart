@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/database_helper.dart';
 import '../../data/repositories/character_repository_impl.dart';
+import '../../data/repositories/web/character_repository_web.dart';
 import '../../domain/repositories/character_repository.dart';
 import '../../domain/usecases/character/allocate_stat_points.dart';
 import '../../domain/usecases/character/create_character.dart';
@@ -80,7 +81,12 @@ Future<void> setupDependencies() async {
     getIt.registerLazySingleton<CharacterRepository>(
       () => CharacterRepositoryImpl(databaseHelper: getIt()),
     );
-    _logger.i('Character repository registered');
+    _logger.i('Character repository registered (SQLite)');
+  } else {
+    getIt.registerLazySingleton<CharacterRepository>(
+      () => CharacterRepositoryWeb(),
+    );
+    _logger.i('Character repository registered (Web in-memory)');
   }
 
   // TODO: Register other repositories as they are implemented
@@ -106,13 +112,11 @@ Future<void> setupDependencies() async {
   // USE CASES
   // ============================================================================
 
-  // Character use cases
-  if (!kIsWeb) {
-    getIt.registerLazySingleton(() => CreateCharacter(getIt()));
-    getIt.registerLazySingleton(() => GetPlayerCharacter(getIt()));
-    getIt.registerLazySingleton(() => AllocateStatPoints(getIt()));
-    _logger.i('Character use cases registered');
-  }
+  // Character use cases (work on both mobile and web)
+  getIt.registerLazySingleton(() => CreateCharacter(getIt()));
+  getIt.registerLazySingleton(() => GetPlayerCharacter(getIt()));
+  getIt.registerLazySingleton(() => AllocateStatPoints(getIt()));
+  _logger.i('Character use cases registered');
 
   // TODO: Register other use cases as they are implemented
   // Quest use cases
