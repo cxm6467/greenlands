@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:logger/logger.dart';
 
 import 'health_check_result.dart';
@@ -62,6 +63,18 @@ class ClaudeHealthCheckService extends HealthCheckService {
     String apiKey, {
     Duration timeout = const Duration(seconds: 10),
   }) async {
+    // Skip connectivity test on web due to CORS restrictions
+    if (kIsWeb) {
+      _logger.w('Skipping Claude API connectivity test on web (CORS)');
+      return HealthCheckResult.warning(
+        'Cannot test API key on web',
+        details:
+            'API connectivity cannot be verified from web browsers due to security restrictions. '
+            'Your API key format is valid, but the actual connection will only work on mobile/desktop apps. '
+            'Quest generation is automatically disabled on web.',
+      );
+    }
+
     try {
       _logger.i('Testing Claude API connectivity...');
 

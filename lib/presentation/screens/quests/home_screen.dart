@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -136,7 +137,7 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButton: AppConfig.enableQuestGeneration
+      floatingActionButton: AppConfig.enableQuestGeneration && !kIsWeb
           ? _buildGenerateQuestButton(context, ref)
           : null,
     );
