@@ -93,7 +93,8 @@ class SetupWizardState {
     if (!enableQuestGeneration) return true;
     final status = claudeHealthCheck?.status;
     return claudeApiKey.isNotEmpty &&
-        (status == HealthCheckStatus.valid || status == HealthCheckStatus.warning);
+        (status == HealthCheckStatus.valid ||
+            status == HealthCheckStatus.warning);
   }
 
   bool get isStep2Valid => true; // Chat integrations - all optional
@@ -154,10 +155,9 @@ class SetupWizardState {
       xpMultiplier: xpMultiplier ?? this.xpMultiplier,
       dailyQuestResetHour: dailyQuestResetHour ?? this.dailyQuestResetHour,
       isCheckingHealth: isCheckingHealth ?? this.isCheckingHealth,
-      currentHealthCheckService:
-          identical(currentHealthCheckService, _sentinel)
-              ? this.currentHealthCheckService
-              : currentHealthCheckService as String?,
+      currentHealthCheckService: identical(currentHealthCheckService, _sentinel)
+          ? this.currentHealthCheckService
+          : currentHealthCheckService as String?,
     );
   }
 }

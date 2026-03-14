@@ -110,11 +110,7 @@ class AiProviderStep extends ConsumerWidget {
 }
 
 class _ClaudeModelField extends StatefulWidget {
-  const _ClaudeModelField({
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
+  const _ClaudeModelField({required this.value, required this.onChanged});
 
   final String value;
   final ValueChanged<String> onChanged;
@@ -155,15 +151,10 @@ class _ClaudeModelFieldState extends State<_ClaudeModelField> {
         hintText: 'claude-3-5-sonnet-20241022',
         border: OutlineInputBorder(),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: GreenlandsTheme.borderColor,
-          ),
+          borderSide: BorderSide(color: GreenlandsTheme.borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: GreenlandsTheme.accentGold,
-            width: 2,
-          ),
+          borderSide: BorderSide(color: GreenlandsTheme.accentGold, width: 2),
         ),
       ),
       onChanged: widget.onChanged,
