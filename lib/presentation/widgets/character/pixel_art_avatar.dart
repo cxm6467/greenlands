@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import '../../../domain/entities/character.dart';
 
-/// A widget that displays a pixel art style avatar for a character
+/// TRUE pixel art avatar with visible square pixels
 class PixelArtAvatar extends StatelessWidget {
   final CharacterRace race;
   final CharacterClass characterClass;
@@ -24,486 +27,285 @@ class PixelArtAvatar extends StatelessWidget {
       decoration: showBorder
           ? BoxDecoration(
               border: Border.all(color: _getBorderColor(), width: 3),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
             )
           : null,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(showBorder ? 5 : 0),
-        child: CustomPaint(
-          painter: PixelArtAvatarPainter(
-            race: race,
-            characterClass: characterClass,
-          ),
-          size: Size(size, size),
-        ),
+      child: FutureBuilder<ui.Image>(
+        future: _generatePixelArt(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(showBorder ? 2 : 0),
+            child: CustomPaint(
+              painter: PixelArtPainter(snapshot.data!),
+              size: Size(size, size),
+            ),
+          );
+        },
       ),
     );
   }
 
   Color _getBorderColor() {
-    // Border color based on character class
     switch (characterClass) {
       case CharacterClass.warrior:
-        return const Color(0xFFB22222); // Red for warrior
+        return const Color(0xFFB22222);
       case CharacterClass.ranger:
-        return const Color(0xFF228B22); // Green for ranger
+        return const Color(0xFF228B22);
       case CharacterClass.wizard:
-        return const Color(0xFF4169E1); // Blue for wizard
+        return const Color(0xFF4169E1);
       case CharacterClass.rogue:
-        return const Color(0xFF8B008B); // Purple for rogue
+        return const Color(0xFF8B008B);
     }
   }
-}
 
-/// CustomPainter that draws pixel art style avatars
-class PixelArtAvatarPainter extends CustomPainter {
-  final CharacterRace race;
-  final CharacterClass characterClass;
+  Future<ui.Image> _generatePixelArt() async {
+    const pixelWidth = 32;
+    const pixelHeight = 32;
 
-  PixelArtAvatarPainter({required this.race, required this.characterClass});
+    // Create pixel buffer
+    final pixels = List.generate(
+      pixelHeight,
+      (_) => List.filled(pixelWidth, const Color(0x00000000)),
+    );
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Base pixel size for a 32x32 pixel grid
-    final rawPixelSize = size.width / 32;
+    // Draw pixels based on race and class
+    _drawPixels(pixels);
 
-    // Snap to the nearest whole logical pixel to avoid sub-pixel blurring
-    final pixelSize = rawPixelSize.roundToDouble();
+    // Convert to image
+    return _pixelsToImage(pixels);
+  }
 
-    // Actual drawn grid size based on the snapped pixel size
-    final gridSize = pixelSize * 32;
-
-    // Center the 32x32 grid within the available canvas size
-    final dx = (size.width - gridSize) / 2;
-    final dy = (size.height - gridSize) / 2;
-
-    final gridSizeSize = Size(gridSize, gridSize);
-
-    canvas.save();
-    canvas.translate(dx, dy);
+  void _drawPixels(List<List<Color>> pixels) {
+    final skinColor = _getSkinColor();
+    final hairColor = _getHairColor();
+    final eyeColor = _getEyeColor();
 
     // Background
-    _drawBackground(canvas, gridSizeSize, pixelSize);
+    _fillRect(pixels, 0, 0, 32, 32, const Color(0xFFECECEC));
 
-    // Face/Head
-    _drawHead(canvas, gridSizeSize, pixelSize);
+    // Head (16x16 centered)
+    _fillRect(pixels, 8, 8, 16, 16, skinColor);
 
-    // Eyes
-    _drawEyes(canvas, gridSizeSize, pixelSize);
+    // Eyes (2 pixels each)
+    _setPixel(pixels, 12, 14, Colors.white);
+    _setPixel(pixels, 13, 14, Colors.white);
+    _setPixel(pixels, 18, 14, Colors.white);
+    _setPixel(pixels, 19, 14, Colors.white);
 
-    // Facial features based on race
-    _drawRacialFeatures(canvas, gridSizeSize, pixelSize);
+    _setPixel(pixels, 12, 14, eyeColor);
+    _setPixel(pixels, 18, 14, eyeColor);
 
-    // Class-specific accessories
-    _drawClassAccessories(canvas, gridSizeSize, pixelSize);
-
-    canvas.restore();
-  }
-
-  void _drawBackground(Canvas canvas, Size size, double pixelSize) {
-    final paint = Paint()
-      ..color = const Color(0xFFECECEC)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
-  }
-
-  void _drawHead(Canvas canvas, Size size, double pixelSize) {
-    final skinColor = _getSkinColor();
-    final paint = Paint()
-      ..color = skinColor
-      ..style = PaintingStyle.fill;
-
-    // Head shape (simplified oval)
-    final headRect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(size.width / 2, size.height / 2),
-        width: pixelSize * 20,
-        height: pixelSize * 24,
-      ),
-      Radius.circular(pixelSize * 4),
-    );
-
-    canvas.drawRRect(headRect, paint);
-
-    // Add shading
-    final shadingPaint = Paint()
-      ..color = skinColor.withValues(alpha: 0.3)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 10,
-          size.height / 2 + pixelSize * 6,
-          pixelSize * 20,
-          pixelSize * 6,
-        ),
-        Radius.circular(pixelSize * 2),
-      ),
-      shadingPaint,
-    );
-  }
-
-  void _drawEyes(Canvas canvas, Size size, double pixelSize) {
-    final eyeColor = _getEyeColor();
-    final eyePaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill;
-
-    final irisPaint = Paint()
-      ..color = eyeColor
-      ..style = PaintingStyle.fill;
-
-    final pupilPaint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
-
-    // Left eye
-    final leftEyeCenter = Offset(
-      size.width / 2 - pixelSize * 5,
-      size.height / 2 - pixelSize * 2,
-    );
-
-    // Right eye
-    final rightEyeCenter = Offset(
-      size.width / 2 + pixelSize * 5,
-      size.height / 2 - pixelSize * 2,
-    );
-
-    // Draw both eyes
-    for (final eyeCenter in [leftEyeCenter, rightEyeCenter]) {
-      // White of eye
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromCenter(
-            center: eyeCenter,
-            width: pixelSize * 5,
-            height: pixelSize * 4,
-          ),
-          Radius.circular(pixelSize),
-        ),
-        eyePaint,
-      );
-
-      // Iris
-      canvas.drawCircle(eyeCenter, pixelSize * 1.5, irisPaint);
-
-      // Pupil
-      canvas.drawCircle(eyeCenter, pixelSize * 0.8, pupilPaint);
-
-      // Shine/highlight
-      canvas.drawCircle(
-        Offset(eyeCenter.dx - pixelSize * 0.3, eyeCenter.dy - pixelSize * 0.3),
-        pixelSize * 0.4,
-        Paint()..color = Colors.white,
-      );
-    }
-  }
-
-  void _drawRacialFeatures(Canvas canvas, Size size, double pixelSize) {
+    // Racial features
     switch (race) {
       case CharacterRace.dwarf:
-        _drawBeard(canvas, size, pixelSize, const Color(0xFF8B4513));
+        _drawDwarfBeard(pixels, hairColor);
         break;
       case CharacterRace.elf:
-        _drawElfEars(canvas, size, pixelSize);
+        _drawElfEars(pixels, skinColor);
         break;
       case CharacterRace.hobbit:
-        _drawHobbitHair(canvas, size, pixelSize);
+        _drawHobbitHair(pixels, hairColor);
         break;
       case CharacterRace.human:
-        _drawHumanHair(canvas, size, pixelSize);
+        _drawHumanHair(pixels, hairColor);
         break;
     }
-  }
 
-  void _drawBeard(
-    Canvas canvas,
-    Size size,
-    double pixelSize,
-    Color beardColor,
-  ) {
-    final paint = Paint()
-      ..color = beardColor
-      ..style = PaintingStyle.fill;
-
-    // Beard shape
-    final beardPath = Path();
-    beardPath.moveTo(size.width / 2 - pixelSize * 8, size.height / 2);
-    beardPath.lineTo(
-      size.width / 2 - pixelSize * 7,
-      size.height / 2 + pixelSize * 10,
-    );
-    beardPath.lineTo(
-      size.width / 2 + pixelSize * 7,
-      size.height / 2 + pixelSize * 10,
-    );
-    beardPath.lineTo(size.width / 2 + pixelSize * 8, size.height / 2);
-    beardPath.close();
-
-    canvas.drawPath(beardPath, paint);
-
-    // Add texture with darker shade
-    final texturePaint = Paint()
-      ..color = beardColor.withValues(alpha: 0.6)
-      ..style = PaintingStyle.fill;
-
-    for (var i = 0; i < 5; i++) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 7 + i * pixelSize * 3,
-          size.height / 2 + pixelSize * 2,
-          pixelSize * 2,
-          pixelSize * 6,
-        ),
-        texturePaint,
-      );
-    }
-  }
-
-  void _drawElfEars(Canvas canvas, Size size, double pixelSize) {
-    final skinColor = _getSkinColor();
-    final paint = Paint()
-      ..color = skinColor
-      ..style = PaintingStyle.fill;
-
-    // Left ear
-    final leftEarPath = Path();
-    leftEarPath.moveTo(
-      size.width / 2 - pixelSize * 10,
-      size.height / 2 - pixelSize * 4,
-    );
-    leftEarPath.lineTo(
-      size.width / 2 - pixelSize * 13,
-      size.height / 2 - pixelSize * 8,
-    );
-    leftEarPath.lineTo(size.width / 2 - pixelSize * 10, size.height / 2);
-    leftEarPath.close();
-    canvas.drawPath(leftEarPath, paint);
-
-    // Right ear
-    final rightEarPath = Path();
-    rightEarPath.moveTo(
-      size.width / 2 + pixelSize * 10,
-      size.height / 2 - pixelSize * 4,
-    );
-    rightEarPath.lineTo(
-      size.width / 2 + pixelSize * 13,
-      size.height / 2 - pixelSize * 8,
-    );
-    rightEarPath.lineTo(size.width / 2 + pixelSize * 10, size.height / 2);
-    rightEarPath.close();
-    canvas.drawPath(rightEarPath, paint);
-  }
-
-  void _drawHobbitHair(Canvas canvas, Size size, double pixelSize) {
-    final hairPaint = Paint()
-      ..color = const Color(0xFF654321)
-      ..style = PaintingStyle.fill;
-
-    // Curly hair on top
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 10,
-          size.height / 2 - pixelSize * 14,
-          pixelSize * 20,
-          pixelSize * 6,
-        ),
-        Radius.circular(pixelSize * 3),
-      ),
-      hairPaint,
-    );
-  }
-
-  void _drawHumanHair(Canvas canvas, Size size, double pixelSize) {
-    final hairPaint = Paint()
-      ..color = const Color(0xFF4A3728)
-      ..style = PaintingStyle.fill;
-
-    // Simple hair
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 10,
-          size.height / 2 - pixelSize * 12,
-          pixelSize * 20,
-          pixelSize * 4,
-        ),
-        Radius.circular(pixelSize * 2),
-      ),
-      hairPaint,
-    );
-  }
-
-  void _drawClassAccessories(Canvas canvas, Size size, double pixelSize) {
+    // Class accessories
     switch (characterClass) {
       case CharacterClass.warrior:
-        _drawHelmet(canvas, size, pixelSize);
+        _drawHelmet(pixels);
         break;
       case CharacterClass.ranger:
-        _drawHood(canvas, size, pixelSize);
+        _drawHood(pixels);
         break;
       case CharacterClass.wizard:
-        _drawWizardHat(canvas, size, pixelSize);
+        _drawWizardHat(pixels);
         break;
       case CharacterClass.rogue:
-        _drawMask(canvas, size, pixelSize);
+        _drawMask(pixels);
         break;
     }
   }
 
-  void _drawHelmet(Canvas canvas, Size size, double pixelSize) {
-    final helmetPaint = Paint()
-      ..color = const Color(0xFF708090)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 11,
-          size.height / 2 - pixelSize * 14,
-          pixelSize * 22,
-          pixelSize * 8,
-        ),
-        Radius.circular(pixelSize * 4),
-      ),
-      helmetPaint,
-    );
-
-    // Metallic shine
-    final shinePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.4)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawCircle(
-      Offset(size.width / 2 - pixelSize * 4, size.height / 2 - pixelSize * 10),
-      pixelSize * 2,
-      shinePaint,
-    );
+  void _drawDwarfBeard(List<List<Color>> pixels, Color color) {
+    // Beard pixels
+    _fillRect(pixels, 10, 20, 12, 6, color);
+    _setPixel(pixels, 9, 21, color);
+    _setPixel(pixels, 22, 21, color);
   }
 
-  void _drawHood(Canvas canvas, Size size, double pixelSize) {
-    final hoodPaint = Paint()
-      ..color = const Color(0xFF2F4F2F)
-      ..style = PaintingStyle.fill;
+  void _drawElfEars(List<List<Color>> pixels, Color color) {
+    // Left ear
+    _setPixel(pixels, 6, 12, color);
+    _setPixel(pixels, 7, 11, color);
+    _setPixel(pixels, 7, 12, color);
 
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 12,
-          size.height / 2 - pixelSize * 14,
-          pixelSize * 24,
-          pixelSize * 10,
-        ),
-        Radius.circular(pixelSize * 6),
-      ),
-      hoodPaint,
-    );
+    // Right ear
+    _setPixel(pixels, 25, 12, color);
+    _setPixel(pixels, 24, 11, color);
+    _setPixel(pixels, 24, 12, color);
   }
 
-  void _drawWizardHat(Canvas canvas, Size size, double pixelSize) {
-    final hatPaint = Paint()
-      ..color = const Color(0xFF4B0082)
-      ..style = PaintingStyle.fill;
+  void _drawHobbitHair(List<List<Color>> pixels, Color color) {
+    // Curly hair on top
+    _fillRect(pixels, 8, 6, 16, 3, color);
+  }
 
-    // Cone shape
-    final hatPath = Path();
-    hatPath.moveTo(size.width / 2, size.height / 2 - pixelSize * 20);
-    hatPath.lineTo(
-      size.width / 2 - pixelSize * 8,
-      size.height / 2 - pixelSize * 10,
-    );
-    hatPath.lineTo(
-      size.width / 2 + pixelSize * 8,
-      size.height / 2 - pixelSize * 10,
-    );
-    hatPath.close();
+  void _drawHumanHair(List<List<Color>> pixels, Color color) {
+    // Simple hair
+    _fillRect(pixels, 8, 7, 16, 2, color);
+  }
 
-    canvas.drawPath(hatPath, hatPaint);
+  void _drawHelmet(List<List<Color>> pixels) {
+    const helmetColor = Color(0xFF708090);
+    _fillRect(pixels, 7, 6, 18, 4, helmetColor);
+    // Visor
+    _fillRect(pixels, 9, 13, 14, 2, helmetColor);
+  }
 
+  void _drawHood(List<List<Color>> pixels) {
+    const hoodColor = Color(0xFF2F4F2F);
+    _fillRect(pixels, 6, 5, 20, 5, hoodColor);
+  }
+
+  void _drawWizardHat(List<List<Color>> pixels) {
+    const hatColor = Color(0xFF4B0082);
+    // Cone
+    for (int y = 0; y < 6; y++) {
+      int width = 16 - (y * 2);
+      int x = 8 + y;
+      _fillRect(pixels, x, y, width, 1, hatColor);
+    }
     // Brim
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 10,
-          size.height / 2 - pixelSize * 11,
-          pixelSize * 20,
-          pixelSize * 2,
-        ),
-        Radius.circular(pixelSize),
-      ),
-      hatPaint,
-    );
-
-    // Stars decoration
-    final starPaint = Paint()
-      ..color = const Color(0xFFFFD700)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawCircle(
-      Offset(size.width / 2 - pixelSize * 2, size.height / 2 - pixelSize * 15),
-      pixelSize * 0.8,
-      starPaint,
-    );
-    canvas.drawCircle(
-      Offset(size.width / 2 + pixelSize * 1, size.height / 2 - pixelSize * 17),
-      pixelSize * 0.6,
-      starPaint,
-    );
+    _fillRect(pixels, 6, 6, 20, 2, hatColor);
+    // Stars
+    _setPixel(pixels, 14, 3, const Color(0xFFFFD700));
+    _setPixel(pixels, 17, 2, const Color(0xFFFFD700));
   }
 
-  void _drawMask(Canvas canvas, Size size, double pixelSize) {
-    final maskPaint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
-
-    // Mask across eyes
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(
-          size.width / 2 - pixelSize * 10,
-          size.height / 2 - pixelSize * 4,
-          pixelSize * 20,
-          pixelSize * 5,
-        ),
-        Radius.circular(pixelSize * 2),
-      ),
-      maskPaint,
-    );
+  void _drawMask(List<List<Color>> pixels) {
+    // Black mask across eyes
+    _fillRect(pixels, 8, 13, 16, 3, Colors.black);
+    // Eye cutouts
+    _fillRect(pixels, 11, 14, 3, 1, Colors.white);
+    _fillRect(pixels, 18, 14, 3, 1, Colors.white);
   }
 
   Color _getSkinColor() {
     switch (race) {
       case CharacterRace.elf:
-        return const Color(0xFFFFE4C4); // Pale
+        return const Color(0xFFFFE4C4);
       case CharacterRace.dwarf:
-        return const Color(0xFFDEB887); // Tan
+        return const Color(0xFFDEB887);
       case CharacterRace.hobbit:
-        return const Color(0xFFF5CBA7); // Rosy
+        return const Color(0xFFF5CBA7);
       case CharacterRace.human:
-        return const Color(0xFFE8B896); // Medium
+        return const Color(0xFFE8B896);
+    }
+  }
+
+  Color _getHairColor() {
+    switch (race) {
+      case CharacterRace.dwarf:
+        return const Color(0xFF8B4513);
+      case CharacterRace.elf:
+        return const Color(0xFFFFD700);
+      case CharacterRace.hobbit:
+        return const Color(0xFF654321);
+      case CharacterRace.human:
+        return const Color(0xFF4A3728);
     }
   }
 
   Color _getEyeColor() {
-    // Eye color based on class for variety
     switch (characterClass) {
       case CharacterClass.warrior:
-        return const Color(0xFF8B4513); // Brown
+        return const Color(0xFF8B4513);
       case CharacterClass.ranger:
-        return const Color(0xFF228B22); // Green
+        return const Color(0xFF228B22);
       case CharacterClass.wizard:
-        return const Color(0xFF4169E1); // Blue
+        return const Color(0xFF4169E1);
       case CharacterClass.rogue:
-        return const Color(0xFF696969); // Grey
+        return const Color(0xFF696969);
     }
   }
 
+  void _setPixel(List<List<Color>> pixels, int x, int y, Color color) {
+    if (x >= 0 && x < pixels[0].length && y >= 0 && y < pixels.length) {
+      pixels[y][x] = color;
+    }
+  }
+
+  void _fillRect(
+    List<List<Color>> pixels,
+    int x,
+    int y,
+    int width,
+    int height,
+    Color color,
+  ) {
+    for (int dy = 0; dy < height; dy++) {
+      for (int dx = 0; dx < width; dx++) {
+        _setPixel(pixels, x + dx, y + dy, color);
+      }
+    }
+  }
+
+  Future<ui.Image> _pixelsToImage(List<List<Color>> pixels) async {
+    final height = pixels.length;
+    final width = pixels[0].length;
+
+    // Create byte data (RGBA format)
+    final bytes = <int>[];
+    for (final row in pixels) {
+      for (final color in row) {
+        bytes.add((color.r * 255.0).round().clamp(0, 255));
+        bytes.add((color.g * 255.0).round().clamp(0, 255));
+        bytes.add((color.b * 255.0).round().clamp(0, 255));
+        bytes.add((color.a * 255.0).round().clamp(0, 255));
+      }
+    }
+
+    final completer = Completer<ui.Image>();
+    ui.decodeImageFromPixels(
+      Uint8List.fromList(bytes),
+      width,
+      height,
+      ui.PixelFormat.rgba8888,
+      (image) => completer.complete(image),
+    );
+
+    return completer.future;
+  }
+}
+
+class PixelArtPainter extends CustomPainter {
+  final ui.Image image;
+
+  PixelArtPainter(this.image);
+
   @override
-  bool shouldRepaint(PixelArtAvatarPainter oldDelegate) {
-    return oldDelegate.race != race ||
-        oldDelegate.characterClass != characterClass;
+  void paint(Canvas canvas, Size size) {
+    // Use nearest-neighbor filtering for sharp pixels
+    final paint = Paint()
+      ..filterQuality = FilterQuality
+          .none // This is the key!
+      ..isAntiAlias = false;
+
+    canvas.drawImageRect(
+      image,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(PixelArtPainter oldDelegate) {
+    return oldDelegate.image != image;
   }
 }

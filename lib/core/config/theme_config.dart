@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GreenlandsTheme {
   // Color palette - Fantasy/16-bit inspired
@@ -15,6 +16,23 @@ class GreenlandsTheme {
   static const Color borderColor = Color(
     0xFFFFFFFF,
   ); // White borders for pixel art effect
+
+  /// Get pixel art text style using Press Start 2P font
+  static TextStyle pixelTextStyle({
+    double fontSize = 14,
+    FontWeight fontWeight = FontWeight.normal,
+    Color color = textPrimary,
+    double? letterSpacing,
+    double? height,
+  }) {
+    return GoogleFonts.pressStart2p(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      letterSpacing: letterSpacing,
+      height: height,
+    );
+  }
 
   static ThemeData get darkTheme {
     return ThemeData(
@@ -35,67 +53,54 @@ class GreenlandsTheme {
       ),
 
       // AppBar theme
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: secondaryBrown,
         foregroundColor: textPrimary,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontFamily: 'Courier New', // Monospace for retro feel
-          fontSize: 20,
+        titleTextStyle: pixelTextStyle(
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: textPrimary,
-          letterSpacing: 2.0,
         ),
       ),
 
-      // Text theme
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: accentGold,
-          letterSpacing: 2.0,
-        ),
-        headlineMedium: TextStyle(
-          fontFamily: 'Courier New',
+      // Text theme - Press Start 2P pixel font
+      textTheme: TextTheme(
+        headlineLarge: pixelTextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-          letterSpacing: 1.5,
+          color: accentGold,
+          height: 1.5,
         ),
-        headlineSmall: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-          letterSpacing: 1.2,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 16,
+        headlineMedium: pixelTextStyle(
+          fontSize: 18,
           color: textPrimary,
           height: 1.5,
         ),
-        bodyMedium: TextStyle(
-          fontFamily: 'Courier New',
+        headlineSmall: pixelTextStyle(
           fontSize: 14,
+          color: textPrimary,
+          height: 1.5,
+        ),
+        bodyLarge: pixelTextStyle(
+          fontSize: 12,
+          color: textPrimary,
+          height: 1.8,
+        ),
+        bodyMedium: pixelTextStyle(
+          fontSize: 10,
           color: textSecondary,
+          height: 1.8,
+        ),
+        labelLarge: pixelTextStyle(
+          fontSize: 12,
+          color: textPrimary,
           height: 1.5,
         ),
-        labelLarge: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+        labelMedium: pixelTextStyle(
+          fontSize: 10,
           color: textPrimary,
-          letterSpacing: 1.2,
-        ),
-        labelMedium: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 14,
-          color: textPrimary,
-          letterSpacing: 1.0,
+          height: 1.5,
         ),
       ),
 
@@ -120,12 +125,7 @@ class GreenlandsTheme {
             side: const BorderSide(color: borderColor, width: 3),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          textStyle: const TextStyle(
-            fontFamily: 'Courier New',
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
+          textStyle: pixelTextStyle(fontSize: 12, color: Colors.black),
           elevation: 4,
         ),
       ),
@@ -137,12 +137,7 @@ class GreenlandsTheme {
           side: const BorderSide(color: accentGold, width: 2),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          textStyle: const TextStyle(
-            fontFamily: 'Courier New',
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
+          textStyle: pixelTextStyle(fontSize: 12, color: accentGold),
         ),
       ),
 
@@ -150,12 +145,7 @@ class GreenlandsTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: accentGold,
-          textStyle: const TextStyle(
-            fontFamily: 'Courier New',
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
+          textStyle: pixelTextStyle(fontSize: 12, color: accentGold),
         ),
       ),
 
@@ -179,16 +169,8 @@ class GreenlandsTheme {
           borderRadius: BorderRadius.zero,
           borderSide: BorderSide(color: errorRed, width: 2),
         ),
-        labelStyle: const TextStyle(
-          fontFamily: 'Courier New',
-          color: textSecondary,
-          fontSize: 14,
-        ),
-        hintStyle: const TextStyle(
-          fontFamily: 'Courier New',
-          color: textSecondary,
-          fontSize: 14,
-        ),
+        labelStyle: pixelTextStyle(fontSize: 10, color: textSecondary),
+        hintStyle: pixelTextStyle(fontSize: 10, color: textSecondary),
       ),
 
       // Progress indicator theme
@@ -212,29 +194,22 @@ class GreenlandsTheme {
           borderRadius: BorderRadius.zero,
           side: const BorderSide(color: borderColor, width: 3),
         ),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: accentGold,
-          letterSpacing: 1.5,
-        ),
-        contentTextStyle: const TextStyle(
-          fontFamily: 'Courier New',
+        titleTextStyle: pixelTextStyle(
           fontSize: 14,
-          color: textPrimary,
+          color: accentGold,
           height: 1.5,
+        ),
+        contentTextStyle: pixelTextStyle(
+          fontSize: 10,
+          color: textPrimary,
+          height: 1.8,
         ),
       ),
 
       // Snackbar theme
       snackBarTheme: SnackBarThemeData(
         backgroundColor: surfaceDark,
-        contentTextStyle: const TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 14,
-          color: textPrimary,
-        ),
+        contentTextStyle: pixelTextStyle(fontSize: 10, color: textPrimary),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.zero,
           side: const BorderSide(color: borderColor, width: 2),
@@ -243,21 +218,14 @@ class GreenlandsTheme {
       ),
 
       // Bottom navigation bar theme
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: secondaryBrown,
         selectedItemColor: accentGold,
         unselectedItemColor: textSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
-        selectedLabelStyle: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: TextStyle(
-          fontFamily: 'Courier New',
-          fontSize: 12,
-        ),
+        selectedLabelStyle: pixelTextStyle(fontSize: 10),
+        unselectedLabelStyle: pixelTextStyle(fontSize: 8),
       ),
 
       // Icon theme
