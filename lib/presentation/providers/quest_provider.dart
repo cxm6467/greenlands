@@ -148,11 +148,13 @@ class QuestActions {
   Future<QuestCompletionResult> completeQuest(String questId) async {
     final result = await _completeQuest(questId);
 
-    // Refresh all quest lists and character
+    // Award XP to character (this handles level-ups automatically)
+    await _characterNotifier.awardQuestXp(result.xpAwarded);
+
+    // Refresh quest lists
     await Future.wait([
       _availableQuestsNotifier.loadQuests(),
       _activeQuestsNotifier.loadQuests(),
-      _characterNotifier.loadCharacter(),
     ]);
 
     return result;

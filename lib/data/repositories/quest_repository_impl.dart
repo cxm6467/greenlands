@@ -312,4 +312,39 @@ class QuestRepositoryImpl implements QuestRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<List<Quest>> getAllQuests() async {
+    try {
+      final db = await databaseHelper.database;
+      final maps = await db.query('quests', orderBy: 'created_at DESC');
+      return maps.map((map) => QuestModel.fromDatabase(map).toEntity()).toList();
+    } catch (e) {
+      logger.e('Error getting all quests: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Quest> createQuest(Quest quest) async {
+    try {
+      final db = await databaseHelper.database;
+      final model = QuestModel.fromEntity(quest);
+      final questData = model.toDatabase();
+
+      // Ensure created_at timestamp is set
+      if (questData['created_at'] == null ||
+          (questData['created_at'] as String).isEmpty) {
+        questData['created_at'] = DateTime.now().toIso8601String();
+      }
+
+      await db.insert('quests', questData);
+      logger.i('Created new quest: ${quest.title}');
+
+      return quest;
+    } catch (e) {
+      logger.e('Error creating quest: $e');
+      rethrow;
+    }
+  }
 }

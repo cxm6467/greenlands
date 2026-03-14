@@ -33,4 +33,10 @@ abstract class QuestRepository {
 
   /// Initialize quests from seed data (first launch)
   Future<void> initializeQuestsFromSeed();
+
+  /// Get all quests (for quest generation context)
+  Future<List<Quest>> getAllQuests();
+
+  /// Create a new quest (for AI-generated quests)
+  Future<Quest> createQuest(Quest quest);
 }
