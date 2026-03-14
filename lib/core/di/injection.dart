@@ -41,7 +41,10 @@ Future<void> setupDependencies() async {
   // ============================================================================
 
   // Logger
-  getIt.registerLazySingleton<Logger>(() => Logger());
+  getIt.registerLazySingleton<Logger>(
+    () => Logger(),
+    instanceName: InjectionNames.logger,
+  );
 
   // Settings Storage (works on all platforms)
   final sharedPrefs = await SharedPreferences.getInstance();
@@ -56,7 +59,7 @@ Future<void> setupDependencies() async {
     SettingsStorageService(
       secureStorage: secureStorage,
       prefs: sharedPrefs,
-      logger: getIt<Logger>(),
+      logger: getIt<Logger>(instanceName: InjectionNames.logger),
     ),
   );
   _logger.i('Settings storage initialized');
@@ -131,14 +134,18 @@ Future<void> setupDependencies() async {
   // Quest repository
   if (!kIsWeb) {
     getIt.registerLazySingleton<QuestRepository>(
-      () =>
-          QuestRepositoryImpl(databaseHelper: getIt(), logger: getIt<Logger>()),
+      () => QuestRepositoryImpl(
+        databaseHelper: getIt(),
+        logger: getIt<Logger>(instanceName: InjectionNames.logger),
+      ),
       instanceName: InjectionNames.questRepository,
     );
     _logger.i('Quest repository registered (SQLite)');
   } else {
     getIt.registerLazySingleton<QuestRepository>(
-      () => QuestRepositoryWeb(logger: getIt<Logger>()),
+      () => QuestRepositoryWeb(
+        logger: getIt<Logger>(instanceName: InjectionNames.logger),
+      ),
       instanceName: InjectionNames.questRepository,
     );
     _logger.i('Quest repository registered (Web in-memory)');
@@ -259,16 +266,28 @@ Future<void> setupDependencies() async {
 
   // Health check services (for setup wizard)
   getIt.registerLazySingleton<ClaudeHealthCheckService>(
-    () => ClaudeHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+    () => ClaudeHealthCheckService(
+      dio: Dio(),
+      logger: getIt<Logger>(instanceName: InjectionNames.logger),
+    ),
   );
   getIt.registerLazySingleton<DiscordHealthCheckService>(
-    () => DiscordHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+    () => DiscordHealthCheckService(
+      dio: Dio(),
+      logger: getIt<Logger>(instanceName: InjectionNames.logger),
+    ),
   );
   getIt.registerLazySingleton<SlackHealthCheckService>(
-    () => SlackHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+    () => SlackHealthCheckService(
+      dio: Dio(),
+      logger: getIt<Logger>(instanceName: InjectionNames.logger),
+    ),
   );
   getIt.registerLazySingleton<GoogleChatHealthCheckService>(
-    () => GoogleChatHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+    () => GoogleChatHealthCheckService(
+      dio: Dio(),
+      logger: getIt<Logger>(instanceName: InjectionNames.logger),
+    ),
   );
   _logger.i('Health check services registered');
 
@@ -276,7 +295,7 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<SetupChecker>(
     () => SetupChecker(
       storage: getIt<SettingsStorageService>(),
-      logger: getIt<Logger>(),
+      logger: getIt<Logger>(instanceName: InjectionNames.logger),
     ),
   );
   _logger.i('Setup checker registered');

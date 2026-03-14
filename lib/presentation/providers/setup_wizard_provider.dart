@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 
 import '../../core/config/app_config.dart';
 import '../../core/di/injection.dart';
+import '../../core/di/injection_names.dart';
 import '../../core/services/health_check/claude_health_check_service.dart';
 import '../../core/services/health_check/discord_health_check_service.dart';
 import '../../core/services/health_check/google_chat_health_check_service.dart';
@@ -526,6 +527,6 @@ final setupWizardProvider =
         discordHealthCheck: getIt<DiscordHealthCheckService>(),
         slackHealthCheck: getIt<SlackHealthCheckService>(),
         googleChatHealthCheck: getIt<GoogleChatHealthCheckService>(),
-        logger: getIt<Logger>(),
+        logger: getIt<Logger>(instanceName: InjectionNames.logger),
       );
     });
