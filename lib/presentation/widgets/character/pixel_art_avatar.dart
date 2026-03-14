@@ -97,8 +97,8 @@ class PixelArtAvatarPainter extends CustomPainter {
     // Class-specific accessories
     _drawClassAccessories(canvas, gridSizeSize, pixelSize);
 
-   canvas.restore();
- }
+    canvas.restore();
+  }
 
   void _drawBackground(Canvas canvas, Size size, double pixelSize) {
     final paint = Paint()
