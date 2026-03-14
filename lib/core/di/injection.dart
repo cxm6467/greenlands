@@ -13,6 +13,14 @@ import '../../domain/repositories/character_repository.dart';
 import '../../domain/usecases/character/allocate_stat_points.dart';
 import '../../domain/usecases/character/create_character.dart';
 import '../../domain/usecases/character/get_player_character.dart';
+import '../../data/repositories/quest_repository_impl.dart';
+import '../../data/repositories/web/quest_repository_web.dart';
+import '../../domain/repositories/quest_repository.dart';
+import '../../domain/usecases/quest/accept_quest.dart';
+import '../../domain/usecases/quest/complete_quest.dart';
+import '../../domain/usecases/quest/get_active_quests.dart';
+import '../../domain/usecases/quest/get_available_quests.dart';
+import '../../domain/usecases/quest/update_quest_objectives.dart';
 import 'injection_names.dart';
 
 final getIt = GetIt.instance;
@@ -114,6 +122,33 @@ Future<void> setupDependencies() async {
     _logger.i('Character repository registered (Web in-memory)');
   }
 
+  // Quest repository
+  if (!kIsWeb) {
+    getIt.registerLazySingleton<QuestRepository>(
+      () =>
+          QuestRepositoryImpl(databaseHelper: getIt(), logger: getIt<Logger>()),
+      instanceName: InjectionNames.questRepository,
+    );
+    _logger.i('Quest repository registered (SQLite)');
+  } else {
+    getIt.registerLazySingleton<QuestRepository>(
+      () => QuestRepositoryWeb(logger: getIt<Logger>()),
+      instanceName: InjectionNames.questRepository,
+    );
+    _logger.i('Quest repository registered (Web in-memory)');
+  }
+
+  // Initialize quest data from seed
+  try {
+    final questRepo = getIt<QuestRepository>(
+      instanceName: InjectionNames.questRepository,
+    );
+    await questRepo.initializeQuestsFromSeed();
+    _logger.i('Quest data initialized from seed');
+  } catch (e) {
+    _logger.w('Quest initialization skipped or failed: $e');
+  }
+
   // TODO: Register other repositories as they are implemented
   // getIt.registerLazySingleton<QuestRepository>(
   //   () => QuestRepositoryImpl(getIt()),
@@ -157,6 +192,37 @@ Future<void> setupDependencies() async {
     instanceName: InjectionNames.allocateStatPoints,
   );
   _logger.i('Character use cases registered');
+
+  // Quest use cases (work on both mobile and web)
+  getIt.registerLazySingleton(
+    () =>
+        GetAvailableQuests(getIt(instanceName: InjectionNames.questRepository)),
+    instanceName: InjectionNames.getAvailableQuests,
+  );
+  getIt.registerLazySingleton(
+    () => GetActiveQuests(getIt(instanceName: InjectionNames.questRepository)),
+    instanceName: InjectionNames.getActiveQuests,
+  );
+  getIt.registerLazySingleton(
+    () => AcceptQuest(getIt(instanceName: InjectionNames.questRepository)),
+    instanceName: InjectionNames.acceptQuest,
+  );
+  getIt.registerLazySingleton(
+    () => UpdateQuestObjectives(
+      getIt(instanceName: InjectionNames.questRepository),
+    ),
+    instanceName: InjectionNames.updateQuestObjectives,
+  );
+  getIt.registerLazySingleton(
+    () => CompleteQuest(
+      questRepository: getIt(instanceName: InjectionNames.questRepository),
+      characterRepository: getIt(
+        instanceName: InjectionNames.characterRepository,
+      ),
+    ),
+    instanceName: InjectionNames.completeQuest,
+  );
+  _logger.i('Quest use cases registered');
 
   // TODO: Register other use cases as they are implemented
   // Quest use cases
@@ -244,7 +310,51 @@ void validateDependencies() {
     throw Exception('Required dependency not registered: AllocateStatPoints');
   }
 
-  _logger.i('✓ All 4 required dependencies validated');
+  if (!getIt.isRegistered<QuestRepository>(
+    instanceName: InjectionNames.questRepository,
+  )) {
+    _logger.e('QuestRepository not registered');
+    throw Exception('Required dependency not registered: QuestRepository');
+  }
+
+  if (!getIt.isRegistered<GetAvailableQuests>(
+    instanceName: InjectionNames.getAvailableQuests,
+  )) {
+    _logger.e('GetAvailableQuests not registered');
+    throw Exception('Required dependency not registered: GetAvailableQuests');
+  }
+
+  if (!getIt.isRegistered<GetActiveQuests>(
+    instanceName: InjectionNames.getActiveQuests,
+  )) {
+    _logger.e('GetActiveQuests not registered');
+    throw Exception('Required dependency not registered: GetActiveQuests');
+  }
+
+  if (!getIt.isRegistered<AcceptQuest>(
+    instanceName: InjectionNames.acceptQuest,
+  )) {
+    _logger.e('AcceptQuest not registered');
+    throw Exception('Required dependency not registered: AcceptQuest');
+  }
+
+  if (!getIt.isRegistered<UpdateQuestObjectives>(
+    instanceName: InjectionNames.updateQuestObjectives,
+  )) {
+    _logger.e('UpdateQuestObjectives not registered');
+    throw Exception(
+      'Required dependency not registered: UpdateQuestObjectives',
+    );
+  }
+
+  if (!getIt.isRegistered<CompleteQuest>(
+    instanceName: InjectionNames.completeQuest,
+  )) {
+    _logger.e('CompleteQuest not registered');
+    throw Exception('Required dependency not registered: CompleteQuest');
+  }
+
+  _logger.i('✓ All 11 required dependencies validated');
 }
 
 /// Reset all dependencies (useful for testing)

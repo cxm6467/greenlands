@@ -8,6 +8,7 @@ import 'core/di/injection.dart';
 import 'core/services/settings_storage_service.dart';
 import 'presentation/providers/character_provider.dart';
 import 'presentation/screens/character/character_creation_screen.dart';
+import 'presentation/screens/quests/home_screen.dart';
 import 'presentation/screens/settings/admin_settings_screen.dart';
 
 final _logger = Logger();
@@ -137,8 +138,8 @@ class WelcomeScreen extends ConsumerWidget {
         if (character == null) {
           return _buildWelcomeContent(context, ref);
         }
-        // TODO: Navigate to home screen with character
-        return _buildWelcomeContent(context, ref);
+        // Character exists, navigate to home screen
+        return const HomeScreen();
       },
     );
   }

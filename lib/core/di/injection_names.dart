@@ -7,13 +7,21 @@ class InjectionNames {
   // Prevent instantiation
   InjectionNames._();
 
-  // Use cases
+  // Character use cases
   static const createCharacter = 'CreateCharacter';
   static const getPlayerCharacter = 'GetPlayerCharacter';
   static const allocateStatPoints = 'AllocateStatPoints';
 
+  // Quest use cases
+  static const getAvailableQuests = 'GetAvailableQuests';
+  static const getActiveQuests = 'GetActiveQuests';
+  static const acceptQuest = 'AcceptQuest';
+  static const updateQuestObjectives = 'UpdateQuestObjectives';
+  static const completeQuest = 'CompleteQuest';
+
   // Repositories
   static const characterRepository = 'CharacterRepository';
+  static const questRepository = 'QuestRepository';
 
   // Core
   static const logger = 'Logger';
