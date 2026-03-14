@@ -90,9 +90,9 @@ final questActionsProvider = Provider<QuestActions>((ref) {
     completeQuest: getIt<CompleteQuest>(
       instanceName: InjectionNames.completeQuest,
     ),
-    availableQuestsNotifier: ref.read(availableQuestsProvider.notifier),
-    activeQuestsNotifier: ref.read(activeQuestsProvider.notifier),
-    characterNotifier: ref.read(characterProvider.notifier),
+    availableQuestsNotifier: ref.watch(availableQuestsProvider.notifier),
+    activeQuestsNotifier: ref.watch(activeQuestsProvider.notifier),
+    characterNotifier: ref.watch(characterProvider.notifier),
   );
 });
 
