@@ -235,13 +235,17 @@ class QuestRepositoryWeb implements QuestRepository {
       final List<dynamic> questsJson = jsonData['quests'];
 
       for (var questJson in questsJson) {
-        final model = QuestModel.fromJson(questJson as Map<String, dynamic>);
-
-        // Set created_at if not present
-        var quest = model.toEntity();
-        if (model.createdAt.isEmpty) {
-          quest = quest.copyWith(createdAt: DateTime.now());
+        // Ensure created_at is set in the JSON before converting to a model/entity
+        final questMap = Map<String, dynamic>.from(
+          questJson as Map<String, dynamic>,
+        );
+        final String? createdAt = questMap['created_at'] as String?;
+        if (createdAt == null || createdAt.trim().isEmpty) {
+          questMap['created_at'] = DateTime.now().toIso8601String();
         }
+
+        final model = QuestModel.fromJson(questMap);
+        final quest = model.toEntity();
 
         _quests.add(quest);
       }
