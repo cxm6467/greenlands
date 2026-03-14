@@ -5,6 +5,7 @@ import '../../providers/character_provider.dart';
 import '../../widgets/character/class_selection_widget.dart';
 import '../../widgets/character/fellowship_role_widget.dart';
 import '../../widgets/character/name_input_widget.dart';
+import '../../widgets/character/pixel_art_avatar.dart';
 import '../../widgets/character/race_selection_widget.dart';
 import '../../widgets/character/stat_allocation_widget.dart';
 
@@ -22,6 +23,36 @@ class CharacterCreationScreen extends ConsumerWidget {
         children: [
           // Step indicator
           _buildStepIndicator(context, creationState.currentStep),
+
+          // Pixel Art Avatar Preview
+          if (creationState.race != null &&
+              creationState.characterClass != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Column(
+                children: [
+                  PixelArtAvatar(
+                    race: creationState.race!,
+                    characterClass: creationState.characterClass!,
+                    size: 160,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    creationState.name.isNotEmpty
+                        ? creationState.name
+                        : 'Your Hero',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '${creationState.race?.displayName ?? ''} ${creationState.characterClass?.displayName ?? ''}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
 
           // Step content
           Expanded(
