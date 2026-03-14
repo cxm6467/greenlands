@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import '../../core/di/injection.dart';
 import '../../core/di/injection_names.dart';
-import '../../data/repositories/character_repository_impl.dart';
 import '../../domain/entities/character.dart';
+import '../../domain/repositories/character_repository.dart';
 import '../../domain/usecases/character/create_character.dart';
 import '../../domain/usecases/character/get_player_character.dart';
 
@@ -80,7 +80,7 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
 
     final character = currentState.value!;
     final logger = getIt<Logger>(instanceName: InjectionNames.logger);
-    final repository = getIt<CharacterRepositoryImpl>(
+    final repository = getIt<CharacterRepository>(
       instanceName: InjectionNames.characterRepository,
     );
 
