@@ -440,8 +440,10 @@ class SetupWizardNotifier extends StateNotifier<SetupWizardState> {
   // NAVIGATION
   // ============================================================================
 
+  static const int _maxStep = 5;
+
   void nextStep() {
-    if (_canGoNext() && state.currentStep < 5) {
+    if (_canGoNext() && state.currentStep < _maxStep) {
       state = state.copyWith(currentStep: state.currentStep + 1);
     }
   }
@@ -453,7 +455,7 @@ class SetupWizardNotifier extends StateNotifier<SetupWizardState> {
   }
 
   void goToStep(int step) {
-    if (step >= 0 && step <= 5) {
+    if (step >= 0 && step <= _maxStep) {
       state = state.copyWith(currentStep: step);
     }
   }

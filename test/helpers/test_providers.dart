@@ -33,10 +33,6 @@ List<Override> createTestProviderOverrides({
   // Set up default mock behaviors
   _setupDefaultMockBehaviors(
     storage: storage,
-    claudeHealthCheck: claudeHealthCheck,
-    discordHealthCheck: discordHealthCheck,
-    slackHealthCheck: slackHealthCheck,
-    googleChatHealthCheck: googleChatHealthCheck,
   );
 
   return [
@@ -57,10 +53,6 @@ List<Override> createTestProviderOverrides({
 /// Set up default mock behaviors to avoid null pointer exceptions
 void _setupDefaultMockBehaviors({
   required MockSettingsStorageService storage,
-  required MockClaudeHealthCheckService claudeHealthCheck,
-  required MockDiscordHealthCheckService discordHealthCheck,
-  required MockSlackHealthCheckService slackHealthCheck,
-  required MockGoogleChatHealthCheckService googleChatHealthCheck,
 }) {
   // SettingsStorageService - return valid default values for testing
   // Async methods (using FlutterSecureStorage)
@@ -81,16 +73,16 @@ void _setupDefaultMockBehaviors({
   when(storage.getDailyQuestResetHour()).thenReturn(0);
 
   // All setters return successfully
-  when(storage.setClaudeApiKey(any)).thenAnswer((_) async => {});
-  when(storage.setClaudeModel(any)).thenAnswer((_) async => {});
-  when(storage.setEnableQuestGeneration(any)).thenAnswer((_) async => {});
-  when(storage.setDiscordBotToken(any)).thenAnswer((_) async => {});
-  when(storage.setSlackAppToken(any)).thenAnswer((_) async => {});
-  when(storage.setGoogleChatWebhook(any)).thenAnswer((_) async => {});
-  when(storage.setEnableChatBots(any)).thenAnswer((_) async => {});
-  when(storage.setEnableNotifications(any)).thenAnswer((_) async => {});
-  when(storage.setEnableRecurringEvents(any)).thenAnswer((_) async => {});
-  when(storage.setMaxFellowshipSize(any)).thenAnswer((_) async => {});
-  when(storage.setXpMultiplier(any)).thenAnswer((_) async => {});
-  when(storage.setDailyQuestResetHour(any)).thenAnswer((_) async => {});
+  when(storage.setClaudeApiKey(any)).thenAnswer((_) async {});
+  when(storage.setClaudeModel(any)).thenAnswer((_) async {});
+  when(storage.setEnableQuestGeneration(any)).thenAnswer((_) async {});
+  when(storage.setDiscordBotToken(any)).thenAnswer((_) async {});
+  when(storage.setSlackAppToken(any)).thenAnswer((_) async {});
+  when(storage.setGoogleChatWebhook(any)).thenAnswer((_) async {});
+  when(storage.setEnableChatBots(any)).thenAnswer((_) async {});
+  when(storage.setEnableNotifications(any)).thenAnswer((_) async {});
+  when(storage.setEnableRecurringEvents(any)).thenAnswer((_) async {});
+  when(storage.setMaxFellowshipSize(any)).thenAnswer((_) async {});
+  when(storage.setXpMultiplier(any)).thenAnswer((_) async {});
+  when(storage.setDailyQuestResetHour(any)).thenAnswer((_) async {});
 }
