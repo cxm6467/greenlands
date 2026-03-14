@@ -69,26 +69,8 @@ class AiProviderStep extends ConsumerWidget {
                           state.currentHealthCheckService == 'Claude',
                     ),
                     const SizedBox(height: 16),
-                    TextField(
-                      controller: TextEditingController(
-                        text: state.claudeModel,
-                      ),
-                      decoration: const InputDecoration(
-                        labelText: 'Claude Model',
-                        hintText: 'claude-3-5-sonnet-20241022',
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: GreenlandsTheme.borderColor,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: GreenlandsTheme.accentGold,
-                            width: 2,
-                          ),
-                        ),
-                      ),
+                    _ClaudeModelField(
+                      value: state.claudeModel,
                       onChanged: notifier.setClaudeModel,
                     ),
                     const SizedBox(height: 16),
@@ -123,6 +105,68 @@ class AiProviderStep extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ClaudeModelField extends StatefulWidget {
+  const _ClaudeModelField({
+    required this.value,
+    required this.onChanged,
+    super.key,
+  });
+
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  State<_ClaudeModelField> createState() => _ClaudeModelFieldState();
+}
+
+class _ClaudeModelFieldState extends State<_ClaudeModelField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didUpdateWidget(covariant _ClaudeModelField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value && widget.value != _controller.text) {
+      _controller.text = widget.value;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _controller,
+      decoration: const InputDecoration(
+        labelText: 'Claude Model',
+        hintText: 'claude-3-5-sonnet-20241022',
+        border: OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: GreenlandsTheme.borderColor,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: GreenlandsTheme.accentGold,
+            width: 2,
+          ),
+        ),
+      ),
+      onChanged: widget.onChanged,
     );
   }
 }

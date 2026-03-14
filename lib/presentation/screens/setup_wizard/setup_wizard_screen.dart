@@ -24,8 +24,10 @@ class _SetupWizardScreenState extends ConsumerState<SetupWizardScreen> {
   @override
   void initState() {
     super.initState();
-    // Load current settings when wizard opens
+    // Reset wizard state and load current settings when wizard opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Refresh the provider to ensure a fresh wizard state (currentStep, health checks, etc.)
+      ref.refresh(setupWizardProvider);
       ref.read(setupWizardProvider.notifier).loadCurrentSettings();
     });
   }

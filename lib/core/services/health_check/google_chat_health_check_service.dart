@@ -172,6 +172,10 @@ class GoogleChatHealthCheckService extends HealthCheckService {
   Future<HealthCheckResult> validatePermissions(String webhookUrl) async {
     // Webhooks don't have permission scopes - if the webhook works, it has permissions
     _logger.d('Google Chat webhooks have implicit permissions');
-    return testConnectivity(webhookUrl);
+    return HealthCheckResult.valid(
+      'Permissions validated',
+      details:
+          'Google Chat incoming webhooks inherit space permissions; no additional permission scopes are required.',
+    );
   }
 }

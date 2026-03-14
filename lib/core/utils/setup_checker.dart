@@ -71,11 +71,15 @@ class SetupChecker {
     final claudeModel = _storage.getClaudeModel();
     final questGenerationEnabled = _storage.getEnableQuestGeneration();
     final maxFellowshipSize = _storage.getMaxFellowshipSize();
+    final chatBotsEnabled = _storage.getEnableChatBots();
+    final hasChatToken = await _hasAnyChatToken();
 
     return (claudeApiKey != null && claudeApiKey.isNotEmpty) ||
         (claudeModel != null && claudeModel.isNotEmpty) ||
         questGenerationEnabled != null ||
-        maxFellowshipSize != null;
+        maxFellowshipSize != null ||
+        chatBotsEnabled != null ||
+        hasChatToken;
   }
 
   /// Check if any chat integration token is configured

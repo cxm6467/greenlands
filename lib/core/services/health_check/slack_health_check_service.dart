@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 import 'health_check_result.dart';
 import 'health_check_service.dart';
 
-/// Health check service for Slack App tokens
+/// Health check service for Slack bot tokens
 class SlackHealthCheckService extends HealthCheckService {
   final Dio _dio;
   final Logger _logger;
@@ -14,15 +14,15 @@ class SlackHealthCheckService extends HealthCheckService {
       _logger = logger;
 
   @override
-  String get serviceName => 'Slack App';
+  String get serviceName => 'Slack Bot';
 
   @override
   Future<HealthCheckResult> validateFormat(String token) async {
     try {
       if (token.isEmpty) {
         return HealthCheckResult.invalidFormat(
-          'App token is required',
-          details: 'Please provide your Slack app token',
+          'Bot token is required',
+          details: 'Please provide your Slack bot token',
         );
       }
 
@@ -43,7 +43,7 @@ class SlackHealthCheckService extends HealthCheckService {
         );
       }
 
-      _logger.d('Slack app token format validation passed');
+      _logger.d('Slack bot token format validation passed');
       return HealthCheckResult.valid(
         'Token format is valid',
         details: 'Ready to test connection',

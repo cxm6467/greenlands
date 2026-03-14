@@ -30,10 +30,8 @@ class GameSettingsStep extends ConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  TextField(
-                    controller: TextEditingController(
-                      text: state.maxFellowshipSize.toString(),
-                    ),
+                  TextFormField(
+                    initialValue: state.maxFellowshipSize.toString(),
                     decoration: const InputDecoration(
                       labelText: 'Max Fellowship Size',
                       hintText: '8',
@@ -60,10 +58,8 @@ class GameSettingsStep extends ConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: TextEditingController(
-                      text: state.xpMultiplier.toString(),
-                    ),
+                  TextFormField(
+                    initialValue: state.xpMultiplier.toString(),
                     decoration: const InputDecoration(
                       labelText: 'XP Multiplier',
                       hintText: '1.0',
@@ -93,10 +89,8 @@ class GameSettingsStep extends ConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: TextEditingController(
-                      text: state.dailyQuestResetHour.toString(),
-                    ),
+                  TextFormField(
+                    initialValue: state.dailyQuestResetHour.toString(),
                     decoration: const InputDecoration(
                       labelText: 'Daily Quest Reset Hour (0-23)',
                       hintText: '0',

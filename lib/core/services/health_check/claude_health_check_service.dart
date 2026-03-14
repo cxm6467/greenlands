@@ -66,25 +66,25 @@ class ClaudeHealthCheckService extends HealthCheckService {
       _logger.i('Testing Claude API connectivity...');
 
       // Make a minimal API call to verify the key works
-      final response = await _dio
-          .post(
-            'https://api.anthropic.com/v1/messages',
-            options: Options(
-              headers: {
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01',
-                'content-type': 'application/json',
-              },
-            ),
-            data: {
-              'model': 'claude-3-5-sonnet-20241022',
-              'max_tokens': 10,
-              'messages': [
-                {'role': 'user', 'content': 'Hi'},
-              ],
-            },
-          )
-          .timeout(timeout);
+      final response = await _dio.post(
+        'https://api.anthropic.com/v1/messages',
+        options: Options(
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json',
+          },
+          sendTimeout: timeout,
+          receiveTimeout: timeout,
+        ),
+        data: {
+          'model': 'claude-3-5-sonnet-20241022',
+          'max_tokens': 10,
+          'messages': [
+            {'role': 'user', 'content': 'Hi'},
+          ],
+        },
+      );
 
       if (response.statusCode == 200) {
         _logger.i('Claude API connectivity test successful');
@@ -160,9 +160,13 @@ class ClaudeHealthCheckService extends HealthCheckService {
 
   @override
   Future<HealthCheckResult> validatePermissions(String apiKey) async {
-    // For Claude API, if connectivity works, permissions are implicit
-    // The API doesn't have separate permission scopes that we need to check
+    // For Claude API, if connectivity works, permissions are implicit.
+    // The API doesn't have separate permission scopes that we need to check,
+    // so we avoid making an additional paid network call here.
     _logger.d('Claude API permissions are implicit with connectivity');
-    return testConnectivity(apiKey);
+    return HealthCheckResult.valid(
+      'Permissions valid',
+      details: 'Claude API permissions are implicit with a valid API key.',
+    );
   }
 }
