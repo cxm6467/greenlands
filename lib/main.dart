@@ -6,10 +6,12 @@ import 'core/config/app_config.dart';
 import 'core/config/theme_config.dart';
 import 'core/di/injection.dart';
 import 'core/services/settings_storage_service.dart';
+import 'core/utils/setup_checker.dart';
 import 'presentation/providers/character_provider.dart';
 import 'presentation/screens/character/character_creation_screen.dart';
 import 'presentation/screens/quests/home_screen.dart';
 import 'presentation/screens/settings/admin_settings_screen.dart';
+import 'presentation/screens/setup_wizard/setup_wizard_screen.dart';
 
 final _logger = Logger();
 
@@ -121,11 +123,53 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-class WelcomeScreen extends ConsumerWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  bool _hasCheckedSetup = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSetupStatus();
+  }
+
+  Future<void> _checkSetupStatus() async {
+    if (_hasCheckedSetup) return;
+
+    try {
+      final setupChecker = getIt<SetupChecker>();
+      final shouldShowWizard = await setupChecker.shouldShowSetupWizard();
+
+      if (shouldShowWizard && mounted) {
+        _hasCheckedSetup = true;
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const SetupWizardScreen(isRerunningSetup: false),
+          ),
+        );
+        // Reload config after wizard completes
+        if (mounted) {
+          await AppConfig.load();
+        }
+      }
+    } catch (e) {
+      _logger.w('Error checking setup wizard status: $e');
+      // Continue to app even if setup check fails
+    }
+
+    if (mounted) {
+      _hasCheckedSetup = true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final characterState = ref.watch(characterProvider);
 
     return characterState.when(
@@ -136,7 +180,7 @@ class WelcomeScreen extends ConsumerWidget {
       ),
       data: (character) {
         if (character == null) {
-          return _buildWelcomeContent(context, ref);
+          return _buildWelcomeContent(context);
         }
         // Character exists, navigate to home screen
         return const HomeScreen();
@@ -144,7 +188,7 @@ class WelcomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildWelcomeContent(BuildContext context, WidgetRef ref) {
+  Widget _buildWelcomeContent(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('THE GREENLANDS')),
       body: Center(

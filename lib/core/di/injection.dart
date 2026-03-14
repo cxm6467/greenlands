@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -7,6 +8,11 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../data/datasources/local/database_helper.dart';
 import '../services/settings_storage_service.dart';
+import '../services/health_check/claude_health_check_service.dart';
+import '../services/health_check/discord_health_check_service.dart';
+import '../services/health_check/slack_health_check_service.dart';
+import '../services/health_check/google_chat_health_check_service.dart';
+import '../utils/setup_checker.dart';
 import '../../data/repositories/character_repository_impl.dart';
 import '../../data/repositories/web/character_repository_web.dart';
 import '../../domain/repositories/character_repository.dart';
@@ -251,7 +257,31 @@ Future<void> setupDependencies() async {
   // SERVICES
   // ============================================================================
 
-  // TODO: Register services as they are implemented
+  // Health check services (for setup wizard)
+  getIt.registerLazySingleton<ClaudeHealthCheckService>(
+    () => ClaudeHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+  );
+  getIt.registerLazySingleton<DiscordHealthCheckService>(
+    () => DiscordHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+  );
+  getIt.registerLazySingleton<SlackHealthCheckService>(
+    () => SlackHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+  );
+  getIt.registerLazySingleton<GoogleChatHealthCheckService>(
+    () => GoogleChatHealthCheckService(dio: Dio(), logger: getIt<Logger>()),
+  );
+  _logger.i('Health check services registered');
+
+  // Setup checker (for wizard triggering)
+  getIt.registerLazySingleton<SetupChecker>(
+    () => SetupChecker(
+      storage: getIt<SettingsStorageService>(),
+      logger: getIt<Logger>(),
+    ),
+  );
+  _logger.i('Setup checker registered');
+
+  // TODO: Register other services as they are implemented
   // getIt.registerLazySingleton<GameEngineService>(
   //   () => GameEngineService(getIt(), getIt()),
   // );

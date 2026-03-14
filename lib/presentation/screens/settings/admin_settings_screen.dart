@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/config/theme_config.dart';
 import '../../providers/settings_provider.dart';
+import '../setup_wizard/setup_wizard_screen.dart';
 
 class AdminSettingsScreen extends ConsumerStatefulWidget {
   const AdminSettingsScreen({super.key});
@@ -365,6 +366,32 @@ class _AdminSettingsScreenState extends ConsumerState<AdminSettingsScreen> {
             ),
           ]),
           const SizedBox(height: 32),
+          OutlinedButton.icon(
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const SetupWizardScreen(isRerunningSetup: true),
+                ),
+              );
+              // Reload settings after wizard completes
+              await AppConfig.load();
+              _loadCurrentSettings();
+            },
+            icon: const Icon(
+              Icons.settings_suggest,
+              color: GreenlandsTheme.accentGold,
+            ),
+            label: const Text(
+              'RUN SETUP WIZARD',
+              style: TextStyle(color: GreenlandsTheme.accentGold),
+            ),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.all(16),
+              side: const BorderSide(color: GreenlandsTheme.accentGold),
+            ),
+          ),
+          const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: _saveSettings,
             icon: const Icon(Icons.save),
