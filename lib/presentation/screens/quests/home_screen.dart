@@ -174,7 +174,9 @@ class HomeScreen extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Quest generation is disabled. Enable it in settings!'),
+            content: Text(
+              'Quest generation is disabled. Enable it in settings!',
+            ),
             backgroundColor: Colors.orange,
           ),
         );

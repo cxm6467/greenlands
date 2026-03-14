@@ -49,16 +49,9 @@ void main() {
 
     group('testConnectivity', () {
       test('returns valid on successful auth.test call', () async {
-        when(mockDio.post(
-          any,
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(mockDio.post(any, options: anyNamed('options'))).thenAnswer(
           (_) async => Response(
-            data: {
-              'ok': true,
-              'team': 'Test Workspace',
-              'user': 'test_user',
-            },
+            data: {'ok': true, 'team': 'Test Workspace', 'user': 'test_user'},
             statusCode: 200,
             requestOptions: RequestOptions(path: '/api/auth.test'),
           ),
@@ -73,32 +66,21 @@ void main() {
       });
 
       test('returns invalid on invalid_auth error', () async {
-        when(mockDio.post(
-          any,
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(mockDio.post(any, options: anyNamed('options'))).thenAnswer(
           (_) async => Response(
-            data: {
-              'ok': false,
-              'error': 'invalid_auth',
-            },
+            data: {'ok': false, 'error': 'invalid_auth'},
             statusCode: 200,
             requestOptions: RequestOptions(path: '/api/auth.test'),
           ),
         );
 
-        final result = await service.testConnectivity(
-          'xoxb-invalid-token',
-        );
+        final result = await service.testConnectivity('xoxb-invalid-token');
         expect(result.status, HealthCheckStatus.invalid);
         expect(result.message, contains('Invalid token'));
       });
 
       test('returns warning on 429 rate limit', () async {
-        when(mockDio.post(
-          any,
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(mockDio.post(any, options: anyNamed('options'))).thenThrow(
           DioException(
             response: Response(
               statusCode: 429,
@@ -117,10 +99,7 @@ void main() {
       });
 
       test('returns connectivity failed on timeout', () async {
-        when(mockDio.post(
-          any,
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(mockDio.post(any, options: anyNamed('options'))).thenThrow(
           DioException(
             type: DioExceptionType.connectionTimeout,
             requestOptions: RequestOptions(path: '/api/auth.test'),
@@ -137,15 +116,9 @@ void main() {
 
     group('validatePermissions', () {
       test('returns valid with note about scopes', () async {
-        when(mockDio.post(
-          any,
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(mockDio.post(any, options: anyNamed('options'))).thenAnswer(
           (_) async => Response(
-            data: {
-              'ok': true,
-              'team': 'Test Workspace',
-            },
+            data: {'ok': true, 'team': 'Test Workspace'},
             statusCode: 200,
             requestOptions: RequestOptions(path: '/api/auth.test'),
           ),
@@ -159,10 +132,7 @@ void main() {
       });
 
       test('returns warning when permissions cannot be verified', () async {
-        when(mockDio.post(
-          any,
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(mockDio.post(any, options: anyNamed('options'))).thenThrow(
           DioException(
             type: DioExceptionType.connectionError,
             requestOptions: RequestOptions(path: '/api/auth.test'),

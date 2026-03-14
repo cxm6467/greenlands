@@ -318,7 +318,9 @@ class QuestRepositoryImpl implements QuestRepository {
     try {
       final db = await databaseHelper.database;
       final maps = await db.query('quests', orderBy: 'created_at DESC');
-      return maps.map((map) => QuestModel.fromDatabase(map).toEntity()).toList();
+      return maps
+          .map((map) => QuestModel.fromDatabase(map).toEntity())
+          .toList();
     } catch (e) {
       logger.e('Error getting all quests: $e');
       rethrow;

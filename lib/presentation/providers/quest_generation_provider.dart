@@ -43,7 +43,9 @@ final generateQuestProvider = FutureProvider.autoDispose<Quest>((ref) async {
   }
 
   if (AppConfig.claudeApiKey.isEmpty) {
-    throw Exception('Claude API key not configured. Please add it in settings.');
+    throw Exception(
+      'Claude API key not configured. Please add it in settings.',
+    );
   }
 
   // Set generating state
@@ -52,9 +54,13 @@ final generateQuestProvider = FutureProvider.autoDispose<Quest>((ref) async {
 
   try {
     // Get completed quests for context using injection
-    final questRepository = getIt<QuestRepository>(instanceName: InjectionNames.questRepository);
+    final questRepository = getIt<QuestRepository>(
+      instanceName: InjectionNames.questRepository,
+    );
     final allQuests = await questRepository.getAllQuests();
-    final completedQuests = allQuests.where((q) => q.status == QuestStatus.completed).toList();
+    final completedQuests = allQuests
+        .where((q) => q.status == QuestStatus.completed)
+        .toList();
 
     // Generate the quest
     final quest = await service.generateQuest(

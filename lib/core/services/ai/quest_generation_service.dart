@@ -17,10 +17,10 @@ class QuestGenerationService {
     required Logger logger,
     required String apiKey,
     required String model,
-  })  : _dio = dio,
-        _logger = logger,
-        _apiKey = apiKey,
-        _model = model;
+  }) : _dio = dio,
+       _logger = logger,
+       _apiKey = apiKey,
+       _model = model;
 
   /// Generate a quest based on player context
   Future<Quest> generateQuest({
@@ -54,7 +54,7 @@ class QuestGenerationService {
           'model': _model,
           'max_tokens': 1024,
           'messages': [
-            {'role': 'user', 'content': prompt}
+            {'role': 'user', 'content': prompt},
           ],
         },
       );
@@ -71,7 +71,9 @@ class QuestGenerationService {
 
       return quest;
     } on DioException catch (e) {
-      _logger.e('API error generating quest: ${e.response?.statusCode} - ${e.message}');
+      _logger.e(
+        'API error generating quest: ${e.response?.statusCode} - ${e.message}',
+      );
       rethrow;
     } catch (e) {
       _logger.e('Error generating quest: $e');
@@ -86,7 +88,8 @@ class QuestGenerationService {
     required CharacterClass characterClass,
     List<Quest>? completedQuests,
   }) {
-    final completedTitles = completedQuests
+    final completedTitles =
+        completedQuests
             ?.where((q) => q.isGenerated)
             .take(5)
             .map((q) => q.title)
@@ -126,7 +129,9 @@ Return ONLY valid JSON in this exact format (no markdown, no extra text):
   /// Extract JSON from response, handling markdown code blocks
   String _extractJson(String content) {
     // Remove markdown code blocks if present
-    final jsonMatch = RegExp(r'```(?:json)?\s*(\{[\s\S]*?\})\s*```').firstMatch(content);
+    final jsonMatch = RegExp(
+      r'```(?:json)?\s*(\{[\s\S]*?\})\s*```',
+    ).firstMatch(content);
     if (jsonMatch != null) {
       return jsonMatch.group(1)!;
     }
@@ -155,10 +160,9 @@ Return ONLY valid JSON in this exact format (no markdown, no extra text):
       status: QuestStatus.available,
       xpReward: json['xp_reward'],
       objectives: (json['objectives'] as List)
-          .map((o) => QuestObjective(
-                text: o['text'],
-                completed: o['completed'],
-              ))
+          .map(
+            (o) => QuestObjective(text: o['text'], completed: o['completed']),
+          )
           .toList(),
       requiredLevel: max(1, playerLevel - 2), // Allow some flex
       prerequisites: [],

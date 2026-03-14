@@ -7,9 +7,7 @@ void main() {
   group('SetupWizardScreen', () {
     testWidgets('displays step indicator with correct steps', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Check that step indicator shows all steps
@@ -23,9 +21,7 @@ void main() {
 
     testWidgets('displays NEXT button on first step', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       expect(find.text('NEXT'), findsOneWidget);
@@ -34,9 +30,7 @@ void main() {
 
     testWidgets('NEXT button navigates to next step', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Tap NEXT button
@@ -49,9 +43,7 @@ void main() {
 
     testWidgets('BACK button navigates to previous step', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Navigate forward
@@ -68,9 +60,7 @@ void main() {
 
     testWidgets('displays SAVE & FINISH on last step', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Navigate to last step (step 5)
@@ -85,9 +75,7 @@ void main() {
 
     testWidgets('step indicator highlights current step', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // First step should be highlighted
@@ -105,15 +93,15 @@ void main() {
 
     testWidgets('shows app bar with title', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       expect(find.text('SETUP WIZARD'), findsOneWidget);
     });
 
-    testWidgets('hides back button when isRerunningSetup is false', (tester) async {
+    testWidgets('hides back button when isRerunningSetup is false', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(home: SetupWizardScreen(isRerunningSetup: false)),
@@ -124,7 +112,9 @@ void main() {
       expect(find.byType(BackButton), findsNothing);
     });
 
-    testWidgets('shows back button when isRerunningSetup is true', (tester) async {
+    testWidgets('shows back button when isRerunningSetup is true', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(home: SetupWizardScreen(isRerunningSetup: true)),
@@ -137,9 +127,7 @@ void main() {
 
     testWidgets('displays welcome step content on first load', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Should show welcome step content
@@ -148,9 +136,7 @@ void main() {
 
     testWidgets('step content changes when navigating', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Initial step

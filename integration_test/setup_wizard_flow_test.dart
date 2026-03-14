@@ -8,11 +8,11 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Setup Wizard Flow', () {
-    testWidgets('Complete wizard flow with quest generation disabled', (tester) async {
+    testWidgets('Complete wizard flow with quest generation disabled', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Step 0: Welcome
@@ -53,9 +53,7 @@ void main() {
 
     testWidgets('Back navigation works correctly', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Navigate forward to step 2
@@ -86,9 +84,7 @@ void main() {
 
     testWidgets('Step indicator shows progress', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Check initial step indicator
@@ -104,11 +100,11 @@ void main() {
       expect(find.byIcon(Icons.check), findsOneWidget);
     });
 
-    testWidgets('Skip button appears when validation fails on optional step', (tester) async {
+    testWidgets('Skip button appears when validation fails on optional step', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Navigate to AI Provider step
@@ -125,31 +121,32 @@ void main() {
       // For now, we just verify the UI structure is correct
     });
 
-    testWidgets('Cannot navigate past AI Provider step without valid API key when quest generation enabled', (tester) async {
+    testWidgets(
+      'Cannot navigate past AI Provider step without valid API key when quest generation enabled',
+      (tester) async {
+        await tester.pumpWidget(
+          const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
+        );
+
+        // Navigate to AI Provider step
+        await tester.tap(find.text('NEXT'));
+        await tester.pumpAndSettle();
+
+        // Quest generation should be enabled by default
+        // Try to go next without providing API key or health check
+        final nextButton = find.text('NEXT');
+
+        // Button should be disabled (onPressed should be null)
+        final button = tester.widget<ElevatedButton>(nextButton);
+        expect(button.onPressed, isNull);
+      },
+    );
+
+    testWidgets('Can skip AI Provider step when quest generation disabled', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
-      );
-
-      // Navigate to AI Provider step
-      await tester.tap(find.text('NEXT'));
-      await tester.pumpAndSettle();
-
-      // Quest generation should be enabled by default
-      // Try to go next without providing API key or health check
-      final nextButton = find.text('NEXT');
-
-      // Button should be disabled (onPressed should be null)
-      final button = tester.widget<ElevatedButton>(nextButton);
-      expect(button.onPressed, isNull);
-    });
-
-    testWidgets('Can skip AI Provider step when quest generation disabled', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(home: SetupWizardScreen()),
-        ),
+        const ProviderScope(child: MaterialApp(home: SetupWizardScreen())),
       );
 
       // Navigate to AI Provider step

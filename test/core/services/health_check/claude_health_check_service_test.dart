@@ -49,16 +49,18 @@ void main() {
 
     group('testConnectivity', () {
       test('returns valid on successful API call', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenAnswer(
           (_) async => Response(
             data: {
               'content': [
-                {'text': 'test response'}
-              ]
+                {'text': 'test response'},
+              ],
             },
             statusCode: 200,
             requestOptions: RequestOptions(path: '/v1/messages'),
@@ -73,11 +75,13 @@ void main() {
       });
 
       test('returns invalid on 401 unauthorized', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             response: Response(
               statusCode: 401,
@@ -96,11 +100,13 @@ void main() {
       });
 
       test('returns connectivity failed on timeout', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             type: DioExceptionType.connectionTimeout,
             requestOptions: RequestOptions(path: '/v1/messages'),
@@ -115,11 +121,13 @@ void main() {
       });
 
       test('returns connectivity failed on network error', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             type: DioExceptionType.connectionError,
             requestOptions: RequestOptions(path: '/v1/messages'),
@@ -136,16 +144,18 @@ void main() {
       test('respects timeout parameter', () async {
         const testTimeout = Duration(seconds: 5);
 
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenAnswer(
           (_) async => Response(
             data: {
               'content': [
-                {'text': 'test response'}
-              ]
+                {'text': 'test response'},
+              ],
             },
             statusCode: 200,
             requestOptions: RequestOptions(path: '/v1/messages'),
@@ -158,26 +168,30 @@ void main() {
         );
 
         // Verify the timeout was passed to the API call
-        verify(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).called(1);
+        verify(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).called(1);
       });
     });
 
     group('validatePermissions', () {
       test('returns same result as testConnectivity for Claude', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenAnswer(
           (_) async => Response(
             data: {
               'content': [
-                {'text': 'test response'}
-              ]
+                {'text': 'test response'},
+              ],
             },
             statusCode: 200,
             requestOptions: RequestOptions(path: '/v1/messages'),
@@ -203,20 +217,28 @@ void main() {
         expect(result.message, contains('Invalid'));
 
         // Should not attempt connectivity check
-        verifyNever(mockDio.post(any, data: anyNamed('data'), options: anyNamed('options')));
+        verifyNever(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        );
       });
 
       test('runs all checks if format is valid', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenAnswer(
           (_) async => Response(
             data: {
               'content': [
-                {'text': 'test response'}
-              ]
+                {'text': 'test response'},
+              ],
             },
             statusCode: 200,
             requestOptions: RequestOptions(path: '/v1/messages'),
@@ -230,15 +252,23 @@ void main() {
         expect(result.status, HealthCheckStatus.valid);
 
         // Should have called the API (connectivity and permissions both use testConnectivity)
-        verify(mockDio.post(any, data: anyNamed('data'), options: anyNamed('options'))).called(greaterThanOrEqualTo(1));
+        verify(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).called(greaterThanOrEqualTo(1));
       });
 
       test('returns connectivity failed on exception', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(Exception('Network error'));
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(Exception('Network error'));
 
         final result = await service.runAllChecks(
           'sk-ant-api03-validkey1234567890abcdefghijklmnopqrstuvwxyz1234567890',
@@ -246,7 +276,10 @@ void main() {
 
         expect(result.status, HealthCheckStatus.invalid);
         // The error message should indicate a failure (either "Connection failed" or "Unexpected error")
-        expect(result.message.toLowerCase(), anyOf(contains('connection'), contains('error')));
+        expect(
+          result.message.toLowerCase(),
+          anyOf(contains('connection'), contains('error')),
+        );
       });
     });
 

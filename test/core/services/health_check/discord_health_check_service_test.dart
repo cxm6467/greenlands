@@ -49,10 +49,7 @@ void main() {
 
     group('testConnectivity', () {
       test('returns valid on successful API call', () async {
-        when(mockDio.get(
-          any,
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(mockDio.get(any, options: anyNamed('options'))).thenAnswer(
           (_) async => Response(
             data: {
               'id': '123456789',
@@ -72,10 +69,7 @@ void main() {
       });
 
       test('returns invalid on 401 unauthorized', () async {
-        when(mockDio.get(
-          any,
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(mockDio.get(any, options: anyNamed('options'))).thenThrow(
           DioException(
             response: Response(
               statusCode: 401,
@@ -94,10 +88,7 @@ void main() {
       });
 
       test('returns warning on 429 rate limit', () async {
-        when(mockDio.get(
-          any,
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(mockDio.get(any, options: anyNamed('options'))).thenThrow(
           DioException(
             response: Response(
               statusCode: 429,
@@ -116,10 +107,7 @@ void main() {
       });
 
       test('returns connectivity failed on timeout', () async {
-        when(mockDio.get(
-          any,
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(mockDio.get(any, options: anyNamed('options'))).thenThrow(
           DioException(
             type: DioExceptionType.connectionTimeout,
             requestOptions: RequestOptions(path: '/users/@me'),
@@ -136,16 +124,9 @@ void main() {
 
     group('validatePermissions', () {
       test('returns valid when bot has required intents', () async {
-        when(mockDio.get(
-          any,
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(mockDio.get(any, options: anyNamed('options'))).thenAnswer(
           (_) async => Response(
-            data: {
-              'id': '123456789',
-              'username': 'TestBot',
-              'bot': true,
-            },
+            data: {'id': '123456789', 'username': 'TestBot', 'bot': true},
             statusCode: 200,
             requestOptions: RequestOptions(path: '/users/@me'),
           ),
