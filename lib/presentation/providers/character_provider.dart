@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import '../../core/di/injection.dart';
 import '../../core/di/injection_names.dart';
+import '../../data/repositories/character_repository_impl.dart';
 import '../../domain/entities/character.dart';
 import '../../domain/usecases/character/create_character.dart';
 import '../../domain/usecases/character/get_player_character.dart';
@@ -62,6 +66,80 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
       state = AsyncValue.error(error, stackTrace);
       rethrow;
     }
+  }
+
+  /// Award XP from completing a quest and handle level-ups
+  Future<void> awardQuestXp(int xpAmount) async {
+    final currentState = state;
+    if (!currentState.hasValue || currentState.value == null) {
+      getIt<Logger>(
+        instanceName: InjectionNames.logger,
+      ).w('Cannot award XP: no character loaded');
+      return;
+    }
+
+    final character = currentState.value!;
+    final logger = getIt<Logger>(instanceName: InjectionNames.logger);
+    final repository = getIt<CharacterRepositoryImpl>(
+      instanceName: InjectionNames.characterRepository,
+    );
+
+    try {
+      var newXp = character.currentXp + xpAmount;
+      var newLevel = character.level;
+      var leveledUp = false;
+
+      logger.i('Awarding $xpAmount XP to ${character.name}');
+
+      // Check for level up(s)
+      while (newXp >= character.xpToNextLevel) {
+        newXp -= character.xpToNextLevel;
+        newLevel++;
+        leveledUp = true;
+        logger.i('Level up! ${character.name} is now level $newLevel');
+      }
+
+      // Calculate new XP required for next level
+      final newXpToNextLevel = _calculateXpToNextLevel(newLevel);
+
+      // Award stat points on level up (1 point per level)
+      final newStatPoints =
+          character.availableStatPoints +
+          (leveledUp ? (newLevel - character.level) : 0);
+
+      // Update character
+      final updatedCharacter = character.copyWith(
+        currentXp: newXp,
+        level: newLevel,
+        xpToNextLevel: newXpToNextLevel,
+        availableStatPoints: newStatPoints,
+      );
+
+      await repository.updateCharacter(updatedCharacter);
+      state = AsyncValue.data(updatedCharacter);
+
+      if (leveledUp) {
+        logger.i(
+          '${character.name} leveled up to $newLevel! (+${newLevel - character.level} stat points)',
+        );
+      }
+    } catch (e, stackTrace) {
+      getIt<Logger>(
+        instanceName: InjectionNames.logger,
+      ).e('Error awarding XP: $e');
+      state = AsyncValue.error(e, stackTrace);
+    }
+  }
+
+  /// Calculate XP required for next level using exponential scaling
+  int _calculateXpToNextLevel(int level) {
+    // Formula: 100 * level^1.5
+    // Level 1: 100 XP
+    // Level 2: 283 XP
+    // Level 3: 520 XP
+    // Level 5: 1118 XP
+    // Level 10: 3162 XP
+    return (100 * pow(level, 1.5)).toInt();
   }
 }
 

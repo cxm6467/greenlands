@@ -26,7 +26,7 @@ QuestModel _$QuestModelFromJson(Map<String, dynamic> json) => QuestModel(
   recurrenceRule: json['recurrence_rule'] as String?,
   acceptedAt: json['accepted_at'] as String?,
   completedAt: json['completed_at'] as String?,
-  createdAt: json['created_at'] as String,
+  createdAt: json['created_at'] as String? ?? '',
 );
 
 Map<String, dynamic> _$QuestModelToJson(QuestModel instance) =>

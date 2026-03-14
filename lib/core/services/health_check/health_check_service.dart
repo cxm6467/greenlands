@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'health_check_result.dart';
 
 /// Abstract interface for health check services that validate API credentials
@@ -37,6 +39,9 @@ abstract class HealthCheckService {
   ///
   /// This is a convenience method that runs all checks in order, stopping
   /// at the first failure. Use this for comprehensive validation.
+  ///
+  /// Note: On web platform, connectivity and permission checks are skipped
+  /// due to CORS restrictions. Only format validation is performed.
   Future<HealthCheckResult> runAllChecks(String value) async {
     // Step 1: Format validation
     final formatResult = await validateFormat(value);
@@ -44,7 +49,16 @@ abstract class HealthCheckService {
       return formatResult;
     }
 
-    // Step 2: Connectivity test
+    // On web platform, we can't make external API calls due to CORS
+    if (kIsWeb) {
+      return HealthCheckResult.warning(
+        'Format valid',
+        details:
+            'Connectivity test skipped on web. The credential format looks correct, but cannot verify with live API calls due to browser security restrictions.',
+      );
+    }
+
+    // Step 2: Connectivity test (native platforms only)
     try {
       final connectivityResult = await testConnectivity(value);
       if (connectivityResult.status == HealthCheckStatus.invalid) {

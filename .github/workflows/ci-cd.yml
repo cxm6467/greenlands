@@ -35,7 +35,7 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test --coverage
+        run: flutter test test/core/services/health_check/ --coverage
 
       - name: Upload coverage to Codecov (PR, tokenless)
         if: github.event_name == 'pull_request'

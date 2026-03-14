@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/config/app_config.dart';
 import '../../../core/config/theme_config.dart';
 import '../../../domain/entities/quest.dart';
 import '../../providers/character_provider.dart';
 import '../../providers/quest_provider.dart';
+import '../../providers/quest_generation_provider.dart';
 import '../settings/admin_settings_screen.dart';
 import 'quest_detail_screen.dart';
 
@@ -133,7 +135,108 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
+      floatingActionButton: AppConfig.enableQuestGeneration
+          ? _buildGenerateQuestButton(context, ref)
+          : null,
     );
+  }
+
+  Widget _buildGenerateQuestButton(BuildContext context, WidgetRef ref) {
+    final isGenerating = ref.watch(isGeneratingQuestProvider);
+
+    return FloatingActionButton.extended(
+      onPressed: isGenerating ? null : () => _generateQuest(context, ref),
+      backgroundColor: isGenerating
+          ? Colors.grey[700]
+          : GreenlandsTheme.accentGold,
+      icon: isGenerating
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            )
+          : const Icon(Icons.auto_awesome, color: Colors.black),
+      label: Text(
+        isGenerating ? 'GENERATING...' : 'GENERATE QUEST',
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _generateQuest(BuildContext context, WidgetRef ref) async {
+    if (!AppConfig.enableQuestGeneration) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Quest generation is disabled. Enable it in settings!',
+            ),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+      return;
+    }
+
+    if (AppConfig.claudeApiKey.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Claude API key not configured. Add it in settings!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      // Trigger quest generation
+      final quest = await ref.refresh(generateQuestProvider.future);
+
+      // Refresh quest lists
+      await Future.wait([
+        ref.read(activeQuestsProvider.notifier).loadQuests(),
+        ref.read(availableQuestsProvider.notifier).loadQuests(),
+      ]);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Quest generated: ${quest.title}!'),
+            backgroundColor: GreenlandsTheme.successGreen,
+            action: SnackBarAction(
+              label: 'VIEW',
+              textColor: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => QuestDetailScreen(questId: quest.id),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to generate quest: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildCharacterCard(BuildContext context, character) {
