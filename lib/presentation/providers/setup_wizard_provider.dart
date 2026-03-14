@@ -526,6 +526,6 @@ final setupWizardProvider =
         discordHealthCheck: getIt<DiscordHealthCheckService>(),
         slackHealthCheck: getIt<SlackHealthCheckService>(),
         googleChatHealthCheck: getIt<GoogleChatHealthCheckService>(),
-        logger: getIt<Logger>(),
+        logger: getIt<Logger>(instanceName: InjectionNames.logger),
       );
     });
