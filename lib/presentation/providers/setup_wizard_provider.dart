@@ -101,18 +101,21 @@ class SetupWizardState {
   bool get isStep4Valid => true; // Game settings - always valid
   bool get isStep5Valid => true; // Review - always valid
 
+  // Sentinel used to distinguish "not provided" from "explicitly null" in copyWith.
+  static const Object _sentinel = Object();
+
   SetupWizardState copyWith({
     int? currentStep,
     String? claudeApiKey,
     String? claudeModel,
-    HealthCheckResult? claudeHealthCheck,
+    Object? claudeHealthCheck = _sentinel,
     bool? enableQuestGeneration,
     String? discordBotToken,
-    HealthCheckResult? discordHealthCheck,
+    Object? discordHealthCheck = _sentinel,
     String? slackAppToken,
-    HealthCheckResult? slackHealthCheck,
+    Object? slackHealthCheck = _sentinel,
     String? googleChatWebhook,
-    HealthCheckResult? googleChatHealthCheck,
+    Object? googleChatHealthCheck = _sentinel,
     bool? enableChatBots,
     bool? enableNotifications,
     bool? enableRecurringEvents,
@@ -120,22 +123,29 @@ class SetupWizardState {
     double? xpMultiplier,
     int? dailyQuestResetHour,
     bool? isCheckingHealth,
-    String? currentHealthCheckService,
+    Object? currentHealthCheckService = _sentinel,
   }) {
     return SetupWizardState(
       currentStep: currentStep ?? this.currentStep,
       claudeApiKey: claudeApiKey ?? this.claudeApiKey,
       claudeModel: claudeModel ?? this.claudeModel,
-      claudeHealthCheck: claudeHealthCheck ?? this.claudeHealthCheck,
+      claudeHealthCheck: identical(claudeHealthCheck, _sentinel)
+          ? this.claudeHealthCheck
+          : claudeHealthCheck as HealthCheckResult?,
       enableQuestGeneration:
           enableQuestGeneration ?? this.enableQuestGeneration,
       discordBotToken: discordBotToken ?? this.discordBotToken,
-      discordHealthCheck: discordHealthCheck ?? this.discordHealthCheck,
+      discordHealthCheck: identical(discordHealthCheck, _sentinel)
+          ? this.discordHealthCheck
+          : discordHealthCheck as HealthCheckResult?,
       slackAppToken: slackAppToken ?? this.slackAppToken,
-      slackHealthCheck: slackHealthCheck ?? this.slackHealthCheck,
+      slackHealthCheck: identical(slackHealthCheck, _sentinel)
+          ? this.slackHealthCheck
+          : slackHealthCheck as HealthCheckResult?,
       googleChatWebhook: googleChatWebhook ?? this.googleChatWebhook,
-      googleChatHealthCheck:
-          googleChatHealthCheck ?? this.googleChatHealthCheck,
+      googleChatHealthCheck: identical(googleChatHealthCheck, _sentinel)
+          ? this.googleChatHealthCheck
+          : googleChatHealthCheck as HealthCheckResult?,
       enableChatBots: enableChatBots ?? this.enableChatBots,
       enableNotifications: enableNotifications ?? this.enableNotifications,
       enableRecurringEvents:
@@ -145,7 +155,9 @@ class SetupWizardState {
       dailyQuestResetHour: dailyQuestResetHour ?? this.dailyQuestResetHour,
       isCheckingHealth: isCheckingHealth ?? this.isCheckingHealth,
       currentHealthCheckService:
-          currentHealthCheckService ?? this.currentHealthCheckService,
+          identical(currentHealthCheckService, _sentinel)
+              ? this.currentHealthCheckService
+              : currentHealthCheckService as String?,
     );
   }
 }
