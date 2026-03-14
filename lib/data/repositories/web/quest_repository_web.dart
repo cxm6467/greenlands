@@ -265,7 +265,8 @@ class QuestRepositoryWeb implements QuestRepository {
   @override
   Future<List<Quest>> getAllQuests() async {
     await _ensureInitialized();
-    return List.from(_quests)..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return List.from(_quests)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
   @override

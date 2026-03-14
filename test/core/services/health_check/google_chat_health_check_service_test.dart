@@ -61,18 +61,22 @@ void main() {
 
     group('testConnectivity', () {
       test('returns valid on successful webhook call', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenAnswer(
           (_) async => Response(
             data: {
               'name': 'spaces/AAAA1234567/messages/abc123',
               'sender': {'name': 'users/12345'},
             },
             statusCode: 200,
-            requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+            requestOptions: RequestOptions(
+              path: '/v1/spaces/AAAA1234567/messages',
+            ),
           ),
         );
 
@@ -84,17 +88,23 @@ void main() {
       });
 
       test('returns invalid on 404 not found', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             response: Response(
               statusCode: 404,
-              requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+              requestOptions: RequestOptions(
+                path: '/v1/spaces/AAAA1234567/messages',
+              ),
             ),
-            requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+            requestOptions: RequestOptions(
+              path: '/v1/spaces/AAAA1234567/messages',
+            ),
             type: DioExceptionType.badResponse,
           ),
         );
@@ -107,17 +117,23 @@ void main() {
       });
 
       test('returns invalid on 401 unauthorized', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             response: Response(
               statusCode: 401,
-              requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+              requestOptions: RequestOptions(
+                path: '/v1/spaces/AAAA1234567/messages',
+              ),
             ),
-            requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+            requestOptions: RequestOptions(
+              path: '/v1/spaces/AAAA1234567/messages',
+            ),
             type: DioExceptionType.badResponse,
           ),
         );
@@ -126,18 +142,29 @@ void main() {
           'https://chat.googleapis.com/v1/spaces/AAAA1234567/messages?key=bad-key&token=bad-token',
         );
         expect(result.status, HealthCheckStatus.invalid);
-        expect(result.message.toLowerCase(), anyOf(contains('invalid'), contains('connection'), contains('failed')));
+        expect(
+          result.message.toLowerCase(),
+          anyOf(
+            contains('invalid'),
+            contains('connection'),
+            contains('failed'),
+          ),
+        );
       });
 
       test('returns connectivity failed on timeout', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             type: DioExceptionType.connectionTimeout,
-            requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+            requestOptions: RequestOptions(
+              path: '/v1/spaces/AAAA1234567/messages',
+            ),
           ),
         );
 
@@ -149,14 +176,18 @@ void main() {
       });
 
       test('returns connectivity failed on connection error', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenThrow(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenThrow(
           DioException(
             type: DioExceptionType.connectionError,
-            requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+            requestOptions: RequestOptions(
+              path: '/v1/spaces/AAAA1234567/messages',
+            ),
           ),
         );
 
@@ -170,15 +201,19 @@ void main() {
 
     group('validatePermissions', () {
       test('returns valid as webhooks have implicit permissions', () async {
-        when(mockDio.post(
-          any,
-          data: anyNamed('data'),
-          options: anyNamed('options'),
-        )).thenAnswer(
+        when(
+          mockDio.post(
+            any,
+            data: anyNamed('data'),
+            options: anyNamed('options'),
+          ),
+        ).thenAnswer(
           (_) async => Response(
             data: {'name': 'spaces/AAAA1234567/messages/abc123'},
             statusCode: 200,
-            requestOptions: RequestOptions(path: '/v1/spaces/AAAA1234567/messages'),
+            requestOptions: RequestOptions(
+              path: '/v1/spaces/AAAA1234567/messages',
+            ),
           ),
         );
 

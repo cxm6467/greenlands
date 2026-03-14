@@ -153,21 +153,30 @@ void main() {
       test('checkClaudeHealth runs health check', () async {
         notifier.setClaudeApiKey('sk-ant-api03-test');
 
-        when(mockClaudeHealthCheck.runAllChecks(any))
-            .thenAnswer((_) async => HealthCheckResult.valid('Valid'));
+        when(
+          mockClaudeHealthCheck.runAllChecks(any),
+        ).thenAnswer((_) async => HealthCheckResult.valid('Valid'));
 
         await notifier.checkClaudeHealth();
 
-        expect(notifier.state.claudeHealthCheck?.status, HealthCheckStatus.valid);
+        expect(
+          notifier.state.claudeHealthCheck?.status,
+          HealthCheckStatus.valid,
+        );
         expect(notifier.state.isCheckingHealth, false);
         expect(notifier.state.currentHealthCheckService, null);
-        verify(mockClaudeHealthCheck.runAllChecks('sk-ant-api03-test')).called(1);
+        verify(
+          mockClaudeHealthCheck.runAllChecks('sk-ant-api03-test'),
+        ).called(1);
       });
 
       test('checkClaudeHealth returns invalid for empty key', () async {
         await notifier.checkClaudeHealth();
 
-        expect(notifier.state.claudeHealthCheck?.status, HealthCheckStatus.invalid);
+        expect(
+          notifier.state.claudeHealthCheck?.status,
+          HealthCheckStatus.invalid,
+        );
         expect(notifier.state.claudeHealthCheck?.message, contains('required'));
         verifyNever(mockClaudeHealthCheck.runAllChecks(any));
       });
@@ -175,52 +184,76 @@ void main() {
       test('checkClaudeHealth handles errors', () async {
         notifier.setClaudeApiKey('sk-ant-api03-test');
 
-        when(mockClaudeHealthCheck.runAllChecks(any))
-            .thenThrow(Exception('Network error'));
+        when(
+          mockClaudeHealthCheck.runAllChecks(any),
+        ).thenThrow(Exception('Network error'));
 
         await notifier.checkClaudeHealth();
 
-        expect(notifier.state.claudeHealthCheck?.status, HealthCheckStatus.invalid);
+        expect(
+          notifier.state.claudeHealthCheck?.status,
+          HealthCheckStatus.invalid,
+        );
         expect(notifier.state.isCheckingHealth, false);
       });
 
       test('checkDiscordHealth runs health check', () async {
         notifier.setDiscordBotToken('test-token.abc.def');
 
-        when(mockDiscordHealthCheck.runAllChecks(any))
-            .thenAnswer((_) async => HealthCheckResult.valid('Valid'));
+        when(
+          mockDiscordHealthCheck.runAllChecks(any),
+        ).thenAnswer((_) async => HealthCheckResult.valid('Valid'));
 
         await notifier.checkDiscordHealth();
 
-        expect(notifier.state.discordHealthCheck?.status, HealthCheckStatus.valid);
+        expect(
+          notifier.state.discordHealthCheck?.status,
+          HealthCheckStatus.valid,
+        );
         expect(notifier.state.isCheckingHealth, false);
-        verify(mockDiscordHealthCheck.runAllChecks('test-token.abc.def')).called(1);
+        verify(
+          mockDiscordHealthCheck.runAllChecks('test-token.abc.def'),
+        ).called(1);
       });
 
       test('checkSlackHealth runs health check', () async {
         notifier.setSlackAppToken('xoxb-test-token');
 
-        when(mockSlackHealthCheck.runAllChecks(any))
-            .thenAnswer((_) async => HealthCheckResult.valid('Valid'));
+        when(
+          mockSlackHealthCheck.runAllChecks(any),
+        ).thenAnswer((_) async => HealthCheckResult.valid('Valid'));
 
         await notifier.checkSlackHealth();
 
-        expect(notifier.state.slackHealthCheck?.status, HealthCheckStatus.valid);
+        expect(
+          notifier.state.slackHealthCheck?.status,
+          HealthCheckStatus.valid,
+        );
         expect(notifier.state.isCheckingHealth, false);
         verify(mockSlackHealthCheck.runAllChecks('xoxb-test-token')).called(1);
       });
 
       test('checkGoogleChatHealth runs health check', () async {
-        notifier.setGoogleChatWebhook('https://chat.googleapis.com/v1/spaces/test');
+        notifier.setGoogleChatWebhook(
+          'https://chat.googleapis.com/v1/spaces/test',
+        );
 
-        when(mockGoogleChatHealthCheck.runAllChecks(any))
-            .thenAnswer((_) async => HealthCheckResult.valid('Valid'));
+        when(
+          mockGoogleChatHealthCheck.runAllChecks(any),
+        ).thenAnswer((_) async => HealthCheckResult.valid('Valid'));
 
         await notifier.checkGoogleChatHealth();
 
-        expect(notifier.state.googleChatHealthCheck?.status, HealthCheckStatus.valid);
+        expect(
+          notifier.state.googleChatHealthCheck?.status,
+          HealthCheckStatus.valid,
+        );
         expect(notifier.state.isCheckingHealth, false);
-        verify(mockGoogleChatHealthCheck.runAllChecks('https://chat.googleapis.com/v1/spaces/test')).called(1);
+        verify(
+          mockGoogleChatHealthCheck.runAllChecks(
+            'https://chat.googleapis.com/v1/spaces/test',
+          ),
+        ).called(1);
       });
     });
 
@@ -300,16 +333,24 @@ void main() {
         // Set up mock responses
         when(mockStorage.setClaudeApiKey(any)).thenAnswer((_) async => {});
         when(mockStorage.setClaudeModel(any)).thenAnswer((_) async => {});
-        when(mockStorage.setEnableQuestGeneration(any)).thenAnswer((_) async => {});
+        when(
+          mockStorage.setEnableQuestGeneration(any),
+        ).thenAnswer((_) async => {});
         when(mockStorage.setDiscordBotToken(any)).thenAnswer((_) async => {});
         when(mockStorage.setSlackAppToken(any)).thenAnswer((_) async => {});
         when(mockStorage.setGoogleChatWebhook(any)).thenAnswer((_) async => {});
         when(mockStorage.setEnableChatBots(any)).thenAnswer((_) async => {});
-        when(mockStorage.setEnableNotifications(any)).thenAnswer((_) async => {});
-        when(mockStorage.setEnableRecurringEvents(any)).thenAnswer((_) async => {});
+        when(
+          mockStorage.setEnableNotifications(any),
+        ).thenAnswer((_) async => {});
+        when(
+          mockStorage.setEnableRecurringEvents(any),
+        ).thenAnswer((_) async => {});
         when(mockStorage.setMaxFellowshipSize(any)).thenAnswer((_) async => {});
         when(mockStorage.setXpMultiplier(any)).thenAnswer((_) async => {});
-        when(mockStorage.setDailyQuestResetHour(any)).thenAnswer((_) async => {});
+        when(
+          mockStorage.setDailyQuestResetHour(any),
+        ).thenAnswer((_) async => {});
 
         // Set some values
         notifier.setClaudeApiKey('sk-ant-api03-test');
@@ -325,12 +366,11 @@ void main() {
       });
 
       test('rethrows errors from storage', () async {
-        when(mockStorage.setClaudeApiKey(any)).thenThrow(Exception('Storage error'));
+        when(
+          mockStorage.setClaudeApiKey(any),
+        ).thenThrow(Exception('Storage error'));
 
-        expect(
-          () async => await notifier.saveAllSettings(),
-          throwsException,
-        );
+        expect(() async => await notifier.saveAllSettings(), throwsException);
       });
     });
   });

@@ -72,13 +72,17 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
   Future<void> awardQuestXp(int xpAmount) async {
     final currentState = state;
     if (!currentState.hasValue || currentState.value == null) {
-      getIt<Logger>(instanceName: InjectionNames.logger).w('Cannot award XP: no character loaded');
+      getIt<Logger>(
+        instanceName: InjectionNames.logger,
+      ).w('Cannot award XP: no character loaded');
       return;
     }
 
     final character = currentState.value!;
     final logger = getIt<Logger>(instanceName: InjectionNames.logger);
-    final repository = getIt<CharacterRepositoryImpl>(instanceName: InjectionNames.characterRepository);
+    final repository = getIt<CharacterRepositoryImpl>(
+      instanceName: InjectionNames.characterRepository,
+    );
 
     try {
       var newXp = character.currentXp + xpAmount;
@@ -99,7 +103,9 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
       final newXpToNextLevel = _calculateXpToNextLevel(newLevel);
 
       // Award stat points on level up (1 point per level)
-      final newStatPoints = character.availableStatPoints + (leveledUp ? (newLevel - character.level) : 0);
+      final newStatPoints =
+          character.availableStatPoints +
+          (leveledUp ? (newLevel - character.level) : 0);
 
       // Update character
       final updatedCharacter = character.copyWith(
@@ -113,10 +119,14 @@ class CharacterNotifier extends StateNotifier<AsyncValue<Character?>> {
       state = AsyncValue.data(updatedCharacter);
 
       if (leveledUp) {
-        logger.i('${character.name} leveled up to $newLevel! (+${newLevel - character.level} stat points)');
+        logger.i(
+          '${character.name} leveled up to $newLevel! (+${newLevel - character.level} stat points)',
+        );
       }
     } catch (e, stackTrace) {
-      getIt<Logger>(instanceName: InjectionNames.logger).e('Error awarding XP: $e');
+      getIt<Logger>(
+        instanceName: InjectionNames.logger,
+      ).e('Error awarding XP: $e');
       state = AsyncValue.error(e, stackTrace);
     }
   }
