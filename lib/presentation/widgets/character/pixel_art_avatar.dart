@@ -64,23 +64,41 @@ class PixelArtAvatarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final pixelSize = size.width / 32; // 32x32 pixel grid
+    // Base pixel size for a 32x32 pixel grid
+    final rawPixelSize = size.width / 32;
+
+    // Snap to the nearest whole logical pixel to avoid sub-pixel blurring
+    final pixelSize = rawPixelSize.roundToDouble();
+
+    // Actual drawn grid size based on the snapped pixel size
+    final gridSize = pixelSize * 32;
+
+    // Center the 32x32 grid within the available canvas size
+    final dx = (size.width - gridSize) / 2;
+    final dy = (size.height - gridSize) / 2;
+
+    final gridSizeSize = Size(gridSize, gridSize);
+
+    canvas.save();
+    canvas.translate(dx, dy);
 
     // Background
-    _drawBackground(canvas, size, pixelSize);
+    _drawBackground(canvas, gridSizeSize, pixelSize);
 
     // Face/Head
-    _drawHead(canvas, size, pixelSize);
+    _drawHead(canvas, gridSizeSize, pixelSize);
 
     // Eyes
-    _drawEyes(canvas, size, pixelSize);
+    _drawEyes(canvas, gridSizeSize, pixelSize);
 
     // Facial features based on race
-    _drawRacialFeatures(canvas, size, pixelSize);
+    _drawRacialFeatures(canvas, gridSizeSize, pixelSize);
 
     // Class-specific accessories
-    _drawClassAccessories(canvas, size, pixelSize);
-  }
+    _drawClassAccessories(canvas, gridSizeSize, pixelSize);
+
+   canvas.restore();
+ }
 
   void _drawBackground(Canvas canvas, Size size, double pixelSize) {
     final paint = Paint()

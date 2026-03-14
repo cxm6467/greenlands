@@ -100,11 +100,13 @@ class WelcomeStep extends StatelessWidget {
       children: [
         PixelArtIcon(type: iconType, size: 48),
         const SizedBox(width: 16),
-        Text(
-          text,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+        Expanded(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

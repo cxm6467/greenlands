@@ -252,7 +252,7 @@ class HomeScreen extends ConsumerWidget {
                 PixelArtAvatar(
                   race: character.race,
                   characterClass: character.characterClass,
-                  size: 80,
+                  size: 96,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
