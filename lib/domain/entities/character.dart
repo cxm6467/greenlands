@@ -65,6 +65,35 @@ class Character {
     );
   }
 
+  /// Get combined racial and class bonuses
+  Map<String, int> get racialBonuses => race.statBonuses;
+  Map<String, int> get classBonuses => characterClass.statBonuses;
+
+  /// Get all stat bonuses combined (racial + class)
+  Map<String, int> get allBonuses {
+    final combined = <String, int>{};
+
+    // Add racial bonuses
+    racialBonuses.forEach((stat, bonus) {
+      combined[stat] = (combined[stat] ?? 0) + bonus;
+    });
+
+    // Add class bonuses
+    classBonuses.forEach((stat, bonus) {
+      combined[stat] = (combined[stat] ?? 0) + bonus;
+    });
+
+    return combined;
+  }
+
+  /// Get formatted text showing all bonuses
+  String get allBonusesText {
+    if (allBonuses.isEmpty) return 'No bonuses';
+    return allBonuses.entries
+        .map((e) => '+${e.value} ${e.key.capitalize()}')
+        .join(', ');
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -87,6 +116,32 @@ enum CharacterRace {
   final String description;
 
   const CharacterRace(this.displayName, this.emoji, this.description);
+
+  /// Get racial stat bonuses
+  Map<String, int> get statBonuses {
+    switch (this) {
+      case CharacterRace.hobbit:
+        return {'dexterity': 2, 'wisdom': 1}; // Nimble and perceptive
+      case CharacterRace.human:
+        return {
+          'strength': 1,
+          'constitution': 1,
+          'charisma': 1,
+        }; // Well-rounded
+      case CharacterRace.elf:
+        return {'dexterity': 2, 'intelligence': 1}; // Graceful and learned
+      case CharacterRace.dwarf:
+        return {'strength': 1, 'constitution': 2}; // Strong and hardy
+    }
+  }
+
+  /// Get formatted bonus display text
+  String get bonusText {
+    final bonuses = statBonuses.entries
+        .map((e) => '+${e.value} ${e.key.capitalize()}')
+        .join(', ');
+    return bonuses;
+  }
 }
 
 enum CharacterClass {
@@ -100,6 +155,28 @@ enum CharacterClass {
   final String description;
 
   const CharacterClass(this.displayName, this.emoji, this.description);
+
+  /// Get class stat bonuses
+  Map<String, int> get statBonuses {
+    switch (this) {
+      case CharacterClass.warrior:
+        return {'strength': 2, 'constitution': 1}; // Powerful and tough
+      case CharacterClass.ranger:
+        return {'dexterity': 2, 'wisdom': 1}; // Agile and perceptive
+      case CharacterClass.wizard:
+        return {'intelligence': 2, 'wisdom': 1}; // Brilliant and wise
+      case CharacterClass.rogue:
+        return {'dexterity': 2, 'charisma': 1}; // Quick and charming
+    }
+  }
+
+  /// Get formatted bonus display text
+  String get bonusText {
+    final bonuses = statBonuses.entries
+        .map((e) => '+${e.value} ${e.key.capitalize()}')
+        .join(', ');
+    return bonuses;
+  }
 }
 
 enum FellowshipRole {
@@ -113,4 +190,12 @@ enum FellowshipRole {
   final String description;
 
   const FellowshipRole(this.displayName, this.emoji, this.description);
+}
+
+/// String extension for capitalizing text
+extension StringExtension on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return '${this[0].toUpperCase()}${substring(1)}';
+  }
 }

@@ -50,6 +50,67 @@ class CharacterCreationScreen extends ConsumerWidget {
                     '${creationState.race?.displayName ?? ''} ${creationState.characterClass?.displayName ?? ''}',
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
+                  const SizedBox(height: 8),
+                  // Show racial and class bonuses
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: GreenlandsTheme.surfaceDark.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: GreenlandsTheme.accentGold.withValues(
+                          alpha: 0.3,
+                        ),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        if (creationState.race != null) ...[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${creationState.race!.emoji} Racial: ',
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                              Text(
+                                creationState.race!.bonusText,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: GreenlandsTheme.accentGold,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (creationState.characterClass != null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${creationState.characterClass!.emoji} Class: ',
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                              Text(
+                                creationState.characterClass!.bonusText,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: GreenlandsTheme.successGreen,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
