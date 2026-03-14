@@ -1,0 +1,49 @@
+name: Auto-approve Copilot suggestions
+
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  auto-approve-copilot:
+    runs-on: ubuntu-latest
+    # Only auto-approve commits from Copilot bot
+    if: |
+      github.actor == 'copilot-autofix[bot]' ||
+      github.actor == 'Copilot' ||
+      (github.event.pull_request.user.login == 'copilot-autofix[bot]')
+    steps:
+      - name: Check if commit is style/formatting only
+        id: check_commit
+        run: |
+          # Get the commit message
+          COMMIT_MSG=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[-1].messageHeadline')
+          echo "commit_msg=$COMMIT_MSG" >> $GITHUB_OUTPUT
+
+          # Check if it's a style/formatting commit
+          if [[ "$COMMIT_MSG" =~ ^(style|format|lint): ]] || [[ "$COMMIT_MSG" == *"formatting"* ]] || [[ "$COMMIT_MSG" == *"Apply suggestions from code review"* ]]; then
+            echo "is_style=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_style=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+
+      - name: Auto-approve style/formatting changes
+        if: steps.check_commit.outputs.is_style == 'true'
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on logic changes
+        if: steps.check_commit.outputs.is_style == 'false'
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --body "👀 Copilot suggested logic changes - please review manually before merging."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
