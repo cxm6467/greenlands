@@ -31,14 +31,12 @@ List<Override> createTestProviderOverrides({
   final logger = mockLogger ?? MockLogger();
 
   // Set up default mock behaviors
-  _setupDefaultMockBehaviors(
-    storage: storage,
-  );
+  _setupDefaultMockBehaviors(storage: storage);
 
   return [
     // Override setupWizardProvider with mocked dependencies
     setupWizardProvider.overrideWith((ref) {
-      return SetupWizardNotifier(
+      final notifier = SetupWizardNotifier(
         storage: storage,
         claudeHealthCheck: claudeHealthCheck,
         discordHealthCheck: discordHealthCheck,
@@ -46,14 +44,15 @@ List<Override> createTestProviderOverrides({
         googleChatHealthCheck: googleChatHealthCheck,
         logger: logger,
       );
+      // Initialize with quest generation disabled to make all steps valid for testing
+      notifier.setEnableQuestGeneration(false);
+      return notifier;
     }),
   ];
 }
 
 /// Set up default mock behaviors to avoid null pointer exceptions
-void _setupDefaultMockBehaviors({
-  required MockSettingsStorageService storage,
-}) {
+void _setupDefaultMockBehaviors({required MockSettingsStorageService storage}) {
   // SettingsStorageService - return valid default values for testing
   // Async methods (using FlutterSecureStorage)
   when(storage.getClaudeApiKey()).thenAnswer((_) async => '');

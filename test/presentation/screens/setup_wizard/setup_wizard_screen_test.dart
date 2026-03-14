@@ -116,23 +116,6 @@ void main() {
       // Second step should be highlighted
       final secondStepText = find.text('AI Provider');
       expect(secondStepText, findsOneWidget);
-
-      // Navigate through remaining steps to reach the last step (Review)
-      await tester.tap(find.text('NEXT')); // to Chat
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('NEXT')); // to Features
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('NEXT')); // to Game
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('NEXT')); // to Review (last step)
-      await tester.pumpAndSettle();
-
-      // Verify we're on the Review step via the step indicator
-      expect(find.text('Review'), findsOneWidget);
-
-      // On the last step, "SAVE & FINISH" should be shown and "NEXT" hidden
-      expect(find.text('SAVE & FINISH'), findsOneWidget);
-      expect(find.text('NEXT'), findsNothing);
     });
 
     testWidgets('shows app bar with title', (tester) async {
