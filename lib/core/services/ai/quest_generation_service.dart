@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:logger/logger.dart';
 import 'package:greenlands/domain/entities/quest.dart';
 import 'package:greenlands/domain/entities/character.dart';
@@ -30,6 +31,16 @@ class QuestGenerationService {
     required CharacterClass characterClass,
     List<Quest>? completedQuests,
   }) async {
+    // Security: Prevent API calls from web to avoid exposing API key
+    if (kIsWeb) {
+      const errorMsg =
+          'Quest generation is not available on web builds. '
+          'This feature requires server-side API calls to protect your API key. '
+          'Please use the mobile or desktop app to generate quests.';
+      _logger.w(errorMsg);
+      throw UnsupportedError(errorMsg);
+    }
+
     final prompt = _buildPrompt(
       playerLevel: playerLevel,
       characterName: characterName,
