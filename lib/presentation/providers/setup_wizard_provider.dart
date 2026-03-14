@@ -89,10 +89,11 @@ class SetupWizardState {
   bool get isStep0Valid => true; // Welcome - always valid
 
   bool get isStep1Valid {
-    // AI Provider - valid if quest generation disabled OR API key is valid
+    // AI Provider - valid if quest generation disabled OR API key is valid/warning
     if (!enableQuestGeneration) return true;
+    final status = claudeHealthCheck?.status;
     return claudeApiKey.isNotEmpty &&
-        claudeHealthCheck?.status == HealthCheckStatus.valid;
+        (status == HealthCheckStatus.valid || status == HealthCheckStatus.warning);
   }
 
   bool get isStep2Valid => true; // Chat integrations - all optional
