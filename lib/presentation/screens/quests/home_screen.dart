@@ -7,6 +7,7 @@ import '../../../domain/entities/quest.dart';
 import '../../providers/character_provider.dart';
 import '../../providers/quest_provider.dart';
 import '../../providers/quest_generation_provider.dart';
+import '../../widgets/character/pixel_art_avatar.dart';
 import '../settings/admin_settings_screen.dart';
 import 'quest_detail_screen.dart';
 
@@ -248,9 +249,10 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text(
-                  character.race.emoji,
-                  style: const TextStyle(fontSize: 48),
+                PixelArtAvatar(
+                  race: character.race,
+                  characterClass: character.characterClass,
+                  size: 96,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
