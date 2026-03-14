@@ -441,7 +441,7 @@ class SetupWizardNotifier extends StateNotifier<SetupWizardState> {
   // ============================================================================
 
   void nextStep() {
-    if (_canGoNext()) {
+    if (_canGoNext() && state.currentStep < 5) {
       state = state.copyWith(currentStep: state.currentStep + 1);
     }
   }

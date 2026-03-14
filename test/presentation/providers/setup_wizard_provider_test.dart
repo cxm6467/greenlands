@@ -2,12 +2,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:greenlands/presentation/providers/setup_wizard_provider.dart';
 import 'package:greenlands/core/services/health_check/health_check_result.dart';
+import 'package:greenlands/core/config/app_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../mocks/mock_settings_storage_service.mocks.dart';
 import '../../mocks/mock_health_check_services.mocks.dart';
 import '../../mocks/mock_logger.mocks.dart';
 
 void main() {
+  // Initialize dotenv for tests that call AppConfig.load()
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    // Initialize dotenv with empty environment to avoid NotInitializedError
+    dotenv.testLoad(fileInput: '');
+  });
+
   group('SetupWizardProvider', () {
     late SetupWizardNotifier notifier;
     late MockSettingsStorageService mockStorage;
@@ -24,6 +33,25 @@ void main() {
       mockSlackHealthCheck = MockSlackHealthCheckService();
       mockGoogleChatHealthCheck = MockGoogleChatHealthCheckService();
       mockLogger = MockLogger();
+
+      // Set up default mock behaviors for AppConfig.load()
+      when(mockStorage.getClaudeApiKey()).thenAnswer((_) async => null);
+      when(mockStorage.getClaudeModel()).thenReturn(null);
+      when(mockStorage.getMcpServerUrl()).thenReturn(null);
+      when(mockStorage.getGoogleChatWebhook()).thenAnswer((_) async => null);
+      when(mockStorage.getDiscordBotToken()).thenAnswer((_) async => null);
+      when(mockStorage.getSlackAppToken()).thenAnswer((_) async => null);
+      when(mockStorage.getEnableQuestGeneration()).thenReturn(null);
+      when(mockStorage.getEnableChatBots()).thenReturn(null);
+      when(mockStorage.getEnableNotifications()).thenReturn(null);
+      when(mockStorage.getEnableRecurringEvents()).thenReturn(null);
+      when(mockStorage.getMaxFellowshipSize()).thenReturn(null);
+      when(mockStorage.getXpMultiplier()).thenReturn(null);
+      when(mockStorage.getDailyQuestResetHour()).thenReturn(null);
+      when(mockStorage.getDebugMode()).thenReturn(null);
+
+      // Set up AppConfig with mock storage before each test
+      AppConfig.setSettingsStorage(mockStorage);
 
       notifier = SetupWizardNotifier(
         storage: mockStorage,
@@ -50,6 +78,8 @@ void main() {
       });
 
       test('nextStep does not exceed max step', () {
+        // Disable quest generation so all steps are valid and nextStep() works
+        notifier.setEnableQuestGeneration(false);
         for (var i = 0; i < 10; i++) {
           notifier.nextStep();
         }
@@ -57,6 +87,8 @@ void main() {
       });
 
       test('previousStep decrements currentStep', () {
+        // Disable quest generation so all steps are valid and nextStep() works
+        notifier.setEnableQuestGeneration(false);
         notifier.nextStep();
         notifier.nextStep();
         notifier.previousStep();
