@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/character.dart';
 
 /// TRUE pixel art avatar with visible square pixels
-class PixelArtAvatar extends StatelessWidget {
+class PixelArtAvatar extends StatefulWidget {
   final CharacterRace race;
   final CharacterClass characterClass;
   final double size;
@@ -20,27 +20,51 @@ class PixelArtAvatar extends StatelessWidget {
   });
 
   @override
+  State<PixelArtAvatar> createState() => _PixelArtAvatarState();
+}
+
+class _PixelArtAvatarState extends State<PixelArtAvatar> {
+  late Future<ui.Image> _imageFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageFuture = _generatePixelArt();
+  }
+
+  @override
+  void didUpdateWidget(covariant PixelArtAvatar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.race != widget.race ||
+        oldWidget.characterClass != widget.characterClass) {
+      // Regenerate the pixel art only when the relevant properties change.
+      _imageFuture = _generatePixelArt();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      width: size,
-      height: size,
-      decoration: showBorder
+      width: widget.size,
+      height: widget.size,
+      decoration: widget.showBorder
           ? BoxDecoration(
               border: Border.all(color: _getBorderColor(), width: 3),
               borderRadius: BorderRadius.circular(4),
             )
           : null,
       child: FutureBuilder<ui.Image>(
-        future: _generatePixelArt(),
+        future: _imageFuture,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
           return ClipRRect(
-            borderRadius: BorderRadius.circular(showBorder ? 2 : 0),
+            borderRadius:
+                BorderRadius.circular(widget.showBorder ? 2 : 0),
             child: CustomPaint(
               painter: PixelArtPainter(snapshot.data!),
-              size: Size(size, size),
+              size: Size(widget.size, widget.size),
             ),
           );
         },
@@ -49,7 +73,7 @@ class PixelArtAvatar extends StatelessWidget {
   }
 
   Color _getBorderColor() {
-    switch (characterClass) {
+    switch (widget.characterClass) {
       case CharacterClass.warrior:
         return const Color(0xFFB22222);
       case CharacterClass.ranger:
