@@ -10,6 +10,9 @@ import '../../providers/quest_provider.dart';
 import '../../providers/quest_generation_provider.dart';
 import '../../widgets/character/pixel_art_avatar.dart';
 import '../settings/admin_settings_screen.dart';
+import '../achievements/achievements_screen.dart';
+import '../shop/cosmetic_shop_screen.dart';
+import '../mini_games/mini_game_launcher.dart';
 import 'quest_detail_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -23,7 +26,7 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('THE GREENLANDS'),
+        title: const Text('GREENFIELD'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -73,6 +76,36 @@ class HomeScreen extends ConsumerWidget {
                 }
                 return _buildCharacterCard(context, character);
               },
+            ),
+            const SizedBox(height: 24),
+
+            // Game navigation buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildNavButton(context, '🎮', 'GAMES', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MiniGameLauncher()),
+                  );
+                }),
+                _buildNavButton(context, '🏆', 'ACHIEVEMENTS', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AchievementsScreen(),
+                    ),
+                  );
+                }),
+                _buildNavButton(context, '💎', 'SHOP', () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const CosmeticShopScreen(),
+                    ),
+                  );
+                }),
+              ],
             ),
             const SizedBox(height: 24),
 
@@ -426,5 +459,18 @@ class HomeScreen extends ConsumerWidget {
       case QuestDifficulty.hard:
         return Colors.red;
     }
+  }
+
+  Widget _buildNavButton(
+    BuildContext context,
+    String emoji,
+    String label,
+    VoidCallback onPressed,
+  ) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Text(emoji, style: const TextStyle(fontSize: 20)),
+      label: Text(label, style: const TextStyle(fontSize: 12)),
+    );
   }
 }
