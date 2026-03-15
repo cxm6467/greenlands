@@ -62,8 +62,8 @@ class _WhackAMoleGameState extends State<WhackAMoleGame> {
       activeMoleIndex = Random().nextInt(gridSize);
     });
 
-    // Hide mole after 800ms if not hit
-    Future.delayed(const Duration(milliseconds: 800), () {
+    // Hide mole after 1 second if not hit
+    Future.delayed(const Duration(seconds: 1), () {
       if (!mounted || isGameOver) return;
       setState(() {
         if (activeMoleIndex >= 0) {
