@@ -56,3 +56,10 @@ app.*.map.json
 .firebase/
 firebase-debug.log
 firebase-debug.*.log
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.zip
