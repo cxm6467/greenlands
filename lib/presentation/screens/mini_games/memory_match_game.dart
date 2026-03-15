@@ -64,6 +64,7 @@ class _MemoryMatchGameState extends State<MemoryMatchGame> {
         // Check for match
         if (cards[firstFlipped!] == cards[secondFlipped!]) {
           Future.delayed(const Duration(milliseconds: 300), () {
+            if (!mounted) return;
             setState(() {
               matched[firstFlipped!] = true;
               matched[secondFlipped!] = true;
@@ -79,6 +80,7 @@ class _MemoryMatchGameState extends State<MemoryMatchGame> {
           });
         } else {
           Future.delayed(const Duration(milliseconds: 800), () {
+            if (!mounted) return;
             setState(() {
               flipped[firstFlipped!] = false;
               flipped[secondFlipped!] = false;

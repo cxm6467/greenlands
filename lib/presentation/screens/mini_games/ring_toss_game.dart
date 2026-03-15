@@ -84,8 +84,10 @@ class _RingTossGameState extends State<RingTossGame>
 
     // Animate ring throw
     _ringController.forward().then((_) {
+      if (!mounted) return;
       _ringController.reset();
       Future.delayed(const Duration(milliseconds: 500), () {
+        if (!mounted) return;
         if (rounds < maxRounds && !isGameOver) {
           setState(() {
             _startNewRound();

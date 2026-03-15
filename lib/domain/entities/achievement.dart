@@ -25,7 +25,7 @@ class Achievement {
 
   double get progressPercent {
     if (progressMax == null || progressMax == 0) return 0;
-    return (progressCurrent ?? 0) / progressMax!;
+    return ((progressCurrent ?? 0) / progressMax!).clamp(0.0, 1.0);
   }
 
   Achievement copyWith({

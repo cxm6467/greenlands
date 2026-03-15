@@ -12,12 +12,20 @@ final shopProvider = StateNotifierProvider<ShopNotifier, List<CosmeticItem>>((
 class ShopNotifier extends StateNotifier<List<CosmeticItem>> {
   ShopNotifier() : super(createStubCosmeticCatalog());
 
-  /// Purchase a cosmetic item (deducts gems, marks as owned)
+  /// Purchase a cosmetic item (checks gem affordability, then marks as owned)
   bool purchaseItem(String itemId, int currentGems) {
-    final item = state.firstWhere(
-      (i) => i.id == itemId,
-      orElse: () => throw Exception('Item not found'),
-    );
+    CosmeticItem? item;
+    for (final cosmetic in state) {
+      if (cosmetic.id == itemId) {
+        item = cosmetic;
+        break;
+      }
+    }
+
+    if (item == null) {
+      // Item not found; treat as failed purchase instead of throwing.
+      return false;
+    }
 
     if (currentGems < item.gemCost) {
       return false; // Insufficient gems
@@ -36,10 +44,18 @@ class ShopNotifier extends StateNotifier<List<CosmeticItem>> {
 
   /// Equip a cosmetic item (unequips others of the same type)
   void equipItem(String itemId) {
-    final item = state.firstWhere(
-      (i) => i.id == itemId,
-      orElse: () => throw Exception('Item not found'),
-    );
+    CosmeticItem? item;
+    for (final cosmetic in state) {
+      if (cosmetic.id == itemId) {
+        item = cosmetic;
+        break;
+      }
+    }
+
+    if (item == null) {
+      // Item not found; no-op instead of throwing.
+      return;
+    }
 
     state = state.map((cosmetic) {
       // Unequip others of the same type

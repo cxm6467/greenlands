@@ -63,18 +63,32 @@ class _ArcheryGameState extends State<ArcheryGame>
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
+    if (!mounted) return;
+
+    final renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox) {
+      return;
+    }
+
+    final localPosition =
+        renderObject.globalToLocal(details.globalPosition);
+
     setState(() {
-      aimX = details.globalPosition.dx;
-      aimY = details.globalPosition.dy;
+      aimX = localPosition.dx;
+      aimY = localPosition.dy;
       isAiming = true;
     });
   }
 
   void _fireArrow() {
-    if (isGameOver || round > maxRounds) return;
+    if (isGameOver || round > maxRounds || !mounted) return;
 
     // Check if arrow hits target (simple distance-based hit detection)
-    final renderBox = context.findRenderObject() as RenderBox;
+    final renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox) {
+      return;
+    }
+    final renderBox = renderObject;
     final centerX = renderBox.size.width / 2;
     final centerY = renderBox.size.height / 2;
 
@@ -85,6 +99,7 @@ class _ArcheryGameState extends State<ArcheryGame>
     final isHit = distance < 40; // Hit radius
 
     _arrowController.forward().then((_) {
+      if (!mounted) return;
       setState(() {
         if (isHit) {
           score += 20;

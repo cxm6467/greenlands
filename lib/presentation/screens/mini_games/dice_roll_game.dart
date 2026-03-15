@@ -51,6 +51,7 @@ class _DiceRollGameState extends State<DiceRollGame>
     });
 
     _diceController.forward().then((_) {
+      if (!mounted) return;
       setState(() {
         // Roll all non-held dice
         for (int i = 0; i < 3; i++) {
@@ -76,6 +77,8 @@ class _DiceRollGameState extends State<DiceRollGame>
 
   void _submitRound() {
     final score = currentRoll.fold(0, (a, b) => a + b);
+    bool shouldRollNextRound = false;
+
     setState(() {
       totalScore += score;
       round++;
@@ -84,9 +87,13 @@ class _DiceRollGameState extends State<DiceRollGame>
         isGameOver = true;
       } else {
         heldDice = [];
-        _rollDice();
+        shouldRollNextRound = true;
       }
     });
+
+    if (shouldRollNextRound) {
+      _rollDice();
+    }
   }
 
   @override

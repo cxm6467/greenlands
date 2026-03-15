@@ -12,6 +12,9 @@ class AchievementsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final achievements = ref.watch(achievementsProvider);
     final unlockedCount = achievements.where((a) => a.isUnlocked).length;
+    final progressPercentage = achievements.isEmpty
+        ? 0.0
+        : (unlockedCount / achievements.length) * 100;
 
     // Group by category
     final grouped = <AchievementCategory, List<Achievement>>{};
@@ -60,7 +63,7 @@ class AchievementsScreen extends ConsumerWidget {
                   Column(
                     children: [
                       Text(
-                        '${((unlockedCount / achievements.length) * 100).toStringAsFixed(0)}%',
+                        '${progressPercentage.toStringAsFixed(0)}%',
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(color: GreenlandsTheme.successGreen),
                       ),
