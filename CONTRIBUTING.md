@@ -1,4 +1,4 @@
-# Contributing to The Greenlands
+# Contributing to Greenfield
 
 ## Getting Started
 

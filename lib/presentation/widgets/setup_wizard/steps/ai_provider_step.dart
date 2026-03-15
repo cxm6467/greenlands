@@ -41,7 +41,7 @@ class AiProviderStep extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'The Greenlands uses Claude to generate dynamic quests and power AI-driven NPCs.',
+                    'Greenfield uses Claude to generate dynamic quests and power AI-driven NPCs.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 16),

@@ -1,6 +1,6 @@
-# Greenlands RPG Project Guidelines
+# Greenfield RPG Project Guidelines
 
-Project-specific instructions for The Greenlands RPG Flutter application.
+Project-specific instructions for Greenfield RPG (The Greenlands fantasy adventure) Flutter application.
 
 ## Test Data Guidelines
 

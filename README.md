@@ -1,4 +1,4 @@
-# 🏰 The Greenlands
+# 🏰 Greenfield
 
 A fantasy RPG with AI-powered narrative, built with Flutter.
 
@@ -29,7 +29,7 @@ A fantasy RPG with AI-powered narrative, built with Flutter.
 ### Chat Platform Integration
 - **Multi-Chat Support**: Google Chat, Slack, Discord (via MCP server)
 - **Hybrid Mode**: Full game locally + status checks via chat commands
-- **Commands**: `!greenlands status`, `!greenlands quests`, `!greenlands inventory`, `!greenlands link`
+- **Commands**: `!greenfield status`, `!greenfield quests`, `!greenfield inventory`, `!greenfield link`
 - **Notifications**: Receive game updates in your chat platforms
 
 ### UI/UX
@@ -219,6 +219,11 @@ DEBUG_MODE=true
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] Documentation
+
+### 📋 Phase 9: Advanced Features (FUTURE)
+- [ ] **Profile/Character Image Generation**: AI-generated character artwork based on race, class, and appearance choices
+- [ ] **Skill Trees**: Progression system with character abilities and passive bonuses
+- [ ] **Ad-Hoc Mini-Games**: Quest-relevant mini-games (combat, puzzles, debates) with outcome impact
 
 ## 🧪 Testing
 

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/di/injection.dart';
 import '../../core/di/injection_names.dart';
 import '../../domain/entities/quest.dart';
+import '../../domain/repositories/quest_repository.dart';
 import '../../domain/usecases/quest/accept_quest.dart';
 import '../../domain/usecases/quest/complete_quest.dart';
 import '../../domain/usecases/quest/get_active_quests.dart';
@@ -50,6 +51,38 @@ class AvailableQuestsNotifier extends StateNotifier<AsyncValue<List<Quest>>> {
   }
 }
 
+/// Provider for completed quests
+final completedQuestsProvider =
+    StateNotifierProvider<CompletedQuestsNotifier, AsyncValue<List<Quest>>>((
+      ref,
+    ) {
+      return CompletedQuestsNotifier(
+        questRepository: getIt<QuestRepository>(
+          instanceName: InjectionNames.questRepository,
+        ),
+      );
+    });
+
+class CompletedQuestsNotifier extends StateNotifier<AsyncValue<List<Quest>>> {
+  final QuestRepository _questRepository;
+
+  CompletedQuestsNotifier({required QuestRepository questRepository})
+    : _questRepository = questRepository,
+      super(const AsyncValue.loading()) {
+    loadQuests();
+  }
+
+  Future<void> loadQuests() async {
+    state = const AsyncValue.loading();
+    try {
+      final completedQuests = await _questRepository.getCompletedQuests();
+      state = AsyncValue.data(completedQuests);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+}
+
 /// Provider for active quests
 final activeQuestsProvider =
     StateNotifierProvider<ActiveQuestsNotifier, AsyncValue<List<Quest>>>((ref) {
@@ -92,6 +125,7 @@ final questActionsProvider = Provider<QuestActions>((ref) {
     ),
     availableQuestsNotifier: ref.watch(availableQuestsProvider.notifier),
     activeQuestsNotifier: ref.watch(activeQuestsProvider.notifier),
+    completedQuestsNotifier: ref.watch(completedQuestsProvider.notifier),
     characterNotifier: ref.watch(characterProvider.notifier),
   );
 });
@@ -102,6 +136,7 @@ class QuestActions {
   final CompleteQuest _completeQuest;
   final AvailableQuestsNotifier _availableQuestsNotifier;
   final ActiveQuestsNotifier _activeQuestsNotifier;
+  final CompletedQuestsNotifier _completedQuestsNotifier;
   final CharacterNotifier _characterNotifier;
 
   QuestActions({
@@ -110,12 +145,14 @@ class QuestActions {
     required CompleteQuest completeQuest,
     required AvailableQuestsNotifier availableQuestsNotifier,
     required ActiveQuestsNotifier activeQuestsNotifier,
+    required CompletedQuestsNotifier completedQuestsNotifier,
     required CharacterNotifier characterNotifier,
   }) : _acceptQuest = acceptQuest,
        _updateQuestObjectives = updateQuestObjectives,
        _completeQuest = completeQuest,
        _availableQuestsNotifier = availableQuestsNotifier,
        _activeQuestsNotifier = activeQuestsNotifier,
+       _completedQuestsNotifier = completedQuestsNotifier,
        _characterNotifier = characterNotifier;
 
   Future<Quest> acceptQuest(String questId) async {
@@ -155,6 +192,7 @@ class QuestActions {
     await Future.wait([
       _availableQuestsNotifier.loadQuests(),
       _activeQuestsNotifier.loadQuests(),
+      _completedQuestsNotifier.loadQuests(),
     ]);
 
     return result;

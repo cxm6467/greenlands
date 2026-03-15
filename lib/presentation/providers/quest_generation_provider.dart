@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:greenlands/core/services/ai/quest_generation_service.dart';
-import 'package:greenlands/core/config/app_config.dart';
-import 'package:greenlands/core/di/injection.dart';
-import 'package:greenlands/core/di/injection_names.dart';
-import 'package:greenlands/domain/entities/quest.dart';
-import 'package:greenlands/domain/repositories/quest_repository.dart';
-import 'package:greenlands/presentation/providers/character_provider.dart';
+import 'package:greenfield/core/services/ai/quest_generation_service.dart';
+import 'package:greenfield/core/config/app_config.dart';
+import 'package:greenfield/core/di/injection.dart';
+import 'package:greenfield/core/di/injection_names.dart';
+import 'package:greenfield/domain/entities/quest.dart';
+import 'package:greenfield/domain/repositories/quest_repository.dart';
+import 'package:greenfield/presentation/providers/character_provider.dart';
 
 /// Provider for the quest generation service
 final questGenerationServiceProvider = Provider<QuestGenerationService>((ref) {

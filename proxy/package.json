@@ -1,0 +1,29 @@
+{
+  "name": "greenfield-ai-proxy",
+  "version": "1.0.0",
+  "description": "Proxy server for Claude API and AWS Bedrock",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development node --watch src/server.js"
+  },
+  "keywords": [
+    "fastify",
+    "claude",
+    "bedrock",
+    "proxy"
+  ],
+  "author": "Greenfield RPG",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.25.2",
+    "@fastify/cors": "^8.5.0",
+    "axios": "^1.6.5",
+    "@aws-sdk/client-bedrock-runtime": "^3.500.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

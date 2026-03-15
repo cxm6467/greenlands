@@ -19,7 +19,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    _logger.i('🏰 Starting The Greenlands...');
+    _logger.i('🏰 Starting Greenfield...');
 
     // Setup dependency injection first (includes settings storage)
     await setupDependencies();
@@ -34,12 +34,12 @@ void main() async {
     // Validate all required dependencies are registered
     validateDependencies();
 
-    _logger.i('✨ The Greenlands initialized successfully!');
+    _logger.i('✨ Greenfield initialized successfully!');
 
     runApp(const ProviderScope(child: ShireApp()));
   } catch (e, stackTrace) {
     _logger.e(
-      'Failed to initialize The Greenlands',
+      'Failed to initialize Greenfield',
       error: e,
       stackTrace: stackTrace,
     );
@@ -53,7 +53,7 @@ class ShireApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'The Greenlands',
+      title: 'Greenfield',
       debugShowCheckedModeBanner: false,
       theme: GreenlandsTheme.darkTheme,
       home: const SplashScreen(),
@@ -76,15 +76,42 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkInitialization() async {
-    // Wait a bit to show the splash screen
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      // Load app configuration
+      await AppConfig.load();
 
-    // TODO: Check if user has a character
-    // For now, show a welcome screen
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-      );
+      // Wait a bit to show the splash screen
+      await Future.delayed(const Duration(seconds: 1));
+
+      // TODO: Check if user has a character
+      // For now, show a welcome screen
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        );
+      }
+    } catch (e) {
+      _logger.e('Failed to load app config: $e');
+      if (mounted) {
+        // Show error and allow retry
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Configuration Error'),
+            content: Text('Failed to load configuration:\n$e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _checkInitialization(); // Retry
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -98,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             // Logo / Title
             Text(
-              '🏰 THE GREENLANDS 🏰',
+              '🏰 GREENFIELD 🏰',
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
             ),
@@ -199,7 +226,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
             children: [
               // Welcome message
               Text(
-                'Welcome to The Greenlands!',
+                'Welcome to Greenfield!',
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
@@ -330,7 +357,7 @@ class ErrorApp extends StatelessWidget {
                 const Icon(Icons.error_outline, color: Colors.red, size: 64),
                 const SizedBox(height: 24),
                 const Text(
-                  'Failed to initialize The Greenlands',
+                  'Failed to initialize Greenfield',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,

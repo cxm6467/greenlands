@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:logger/logger.dart';
 
+import '../../config/app_config.dart';
 import 'health_check_result.dart';
 import 'health_check_service.dart';
 
@@ -63,30 +64,38 @@ class ClaudeHealthCheckService extends HealthCheckService {
     String apiKey, {
     Duration timeout = const Duration(seconds: 10),
   }) async {
-    // Skip connectivity test on web due to CORS restrictions
-    if (kIsWeb) {
-      _logger.w('Skipping Claude API connectivity test on web (CORS)');
-      return HealthCheckResult.warning(
-        'Cannot test API key on web',
-        details:
-            'API connectivity cannot be verified from web browsers due to security restrictions. '
-            'Your API key format is valid, but the actual connection will only work on mobile/desktop apps. '
-            'Quest generation is automatically disabled on web.',
-      );
-    }
-
     try {
       _logger.i('Testing Claude API connectivity...');
 
+      // Determine API endpoint based on platform
+      final String apiUrl;
+      final Map<String, String> headers;
+
+      final useDirectApi = !kIsWeb || apiKey.isNotEmpty;
+
+      if (useDirectApi && apiKey.isNotEmpty) {
+        // Direct API call (mobile/desktop or web with API key)
+        apiUrl = 'https://api.anthropic.com/v1/messages';
+        headers = {
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        };
+        _logger.i(
+          'Using direct Claude API (${kIsWeb ? 'web with API key' : 'native platform'})',
+        );
+      } else {
+        // Use proxy on web to avoid CORS when no direct API available
+        apiUrl = '${AppConfig.aiProxyUrl}/messages';
+        headers = {'content-type': 'application/json'};
+        _logger.i('Using proxy server for web platform: $apiUrl');
+      }
+
       // Make a minimal API call to verify the key works
       final response = await _dio.post(
-        'https://api.anthropic.com/v1/messages',
+        apiUrl,
         options: Options(
-          headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'content-type': 'application/json',
-          },
+          headers: headers,
           sendTimeout: timeout,
           receiveTimeout: timeout,
         ),
@@ -143,18 +152,21 @@ class ClaudeHealthCheckService extends HealthCheckService {
 
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
+        final serverName = kIsWeb ? 'proxy server' : 'api.anthropic.com';
         return HealthCheckResult.connectivityFailed(
           'Connection timeout',
           details:
-              'Could not reach api.anthropic.com within ${timeout.inSeconds} seconds',
+              'Could not reach $serverName within ${timeout.inSeconds} seconds',
         );
       }
 
       if (e.type == DioExceptionType.connectionError) {
+        final troubleshooting = kIsWeb
+            ? 'Ensure the proxy server is running on ${AppConfig.aiProxyUrl}'
+            : 'Check your internet connection';
         return HealthCheckResult.connectivityFailed(
           'Connection error',
-          details:
-              'Could not connect to api.anthropic.com. Check your internet connection.',
+          details: 'Could not connect to AI service. $troubleshooting',
         );
       }
 

@@ -1,4 +1,4 @@
-# Deployment Guide - The Greenlands
+# Deployment Guide - Greenfield
 
 ## Local Network Access (Phone/Tablet)
 
@@ -149,7 +149,7 @@ npm install -g wrangler
 ~/flutter/bin/flutter build web
 
 # Deploy
-wrangler pages publish build/web --project-name=greenlands
+wrangler pages publish build/web --project-name=greenfield
 ```
 
 **Free Tier:**
@@ -158,7 +158,7 @@ wrangler pages publish build/web --project-name=greenlands
 - Automatic HTTPS
 - 500 builds/month
 
-**Result:** Your app at `https://greenlands.pages.dev`
+**Result:** Your app at `https://greenfield.pages.dev`
 
 ---
 
@@ -170,7 +170,7 @@ Create a deployment script for easy updates:
 #!/bin/bash
 # deploy.sh
 
-echo "🏰 Building The Greenlands..."
+echo "🏰 Building Greenfield..."
 ~/flutter/bin/flutter build web
 
 echo "📦 Deploying to Firebase..."
@@ -193,7 +193,7 @@ Run anytime:
 
 ## Recommended Choice
 
-For **The Greenlands MVP**, I recommend:
+For **Greenfield**, I recommend:
 
 1. **Development/Testing:** Local network access (already working!)
 2. **Public Demo:** **Firebase Hosting** (best free tier, reliable, fast)

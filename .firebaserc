@@ -1,8 +1,0 @@
-{
-  "projects": {
-    "default": "your-project-id-here",
-    "dev": "the-greenlands-5e8a3"
-  },
-  "targets": {},
-  "etags": {}
-}

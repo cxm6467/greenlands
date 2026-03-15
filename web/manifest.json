@@ -1,11 +1,11 @@
 {
-    "name": "The Greenlands",
-    "short_name": "Greenlands",
+    "name": "Greenfield",
+    "short_name": "Greenfield",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#1a1a1a",
     "theme_color": "#2d5016",
-    "description": "The Greenlands - A Fantasy Adventure RPG",
+    "description": "Greenfield - A Fantasy Adventure RPG",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greenlands/presentation/screens/setup_wizard/setup_wizard_screen.dart';
+import 'package:greenfield/presentation/screens/setup_wizard/setup_wizard_screen.dart';
 
 import '../../../helpers/test_providers.dart';
 

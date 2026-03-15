@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:greenlands/core/services/health_check/slack_health_check_service.dart';
-import 'package:greenlands/core/services/health_check/health_check_result.dart';
+import 'package:greenfield/core/services/health_check/slack_health_check_service.dart';
+import 'package:greenfield/core/services/health_check/health_check_result.dart';
 
 import '../../../mocks/mock_dio.mocks.dart';
 import '../../../mocks/mock_logger.mocks.dart';

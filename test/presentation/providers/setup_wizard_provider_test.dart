@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:greenlands/presentation/providers/setup_wizard_provider.dart';
-import 'package:greenlands/core/services/health_check/health_check_result.dart';
-import 'package:greenlands/core/config/app_config.dart';
+import 'package:greenfield/presentation/providers/setup_wizard_provider.dart';
+import 'package:greenfield/core/services/health_check/health_check_result.dart';
+import 'package:greenfield/core/config/app_config.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../mocks/mock_settings_storage_service.mocks.dart';

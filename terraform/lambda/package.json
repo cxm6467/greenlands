@@ -1,0 +1,16 @@
+{
+  "name": "greenfield-lambda-proxy",
+  "version": "1.0.0",
+  "description": "AWS Lambda proxy for Greenfield AI requests to Bedrock",
+  "main": "index.js",
+  "type": "commonjs",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.500.0",
+    "@aws-sdk/client-ssm": "^3.500.0",
+    "axios": "^1.6.5"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "18"
+  }
+}

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:greenlands/presentation/providers/setup_wizard_provider.dart';
+import 'package:greenfield/presentation/providers/setup_wizard_provider.dart';
 import 'package:mockito/mockito.dart';
 
 import '../mocks/mock_settings_storage_service.mocks.dart';

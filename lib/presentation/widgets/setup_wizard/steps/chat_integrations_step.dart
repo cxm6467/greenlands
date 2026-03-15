@@ -27,7 +27,7 @@ class ChatIntegrationsStep extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Connect The Greenlands to your favorite chat platforms (all optional)',
+            'Connect Greenfield to your favorite chat platforms (all optional)',
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),

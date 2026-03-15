@@ -48,18 +48,18 @@ class GameConstants {
 
   // Races and their stat bonuses
   static const Map<String, Map<String, int>> RACE_STAT_BONUSES = {
-    'Hobbit': {'agility': 2, 'wisdom': 1},
-    'Human': {'strength': 1, 'wisdom': 1, 'agility': 1, 'constitution': 1},
-    'Elf': {'wisdom': 2, 'agility': 1},
+    'Hobbit': {'dexterity': 2, 'wisdom': 1},
+    'Human': {'strength': 1, 'wisdom': 1, 'charisma': 1, 'constitution': 1},
+    'Elf': {'wisdom': 2, 'dexterity': 1},
     'Dwarf': {'constitution': 2, 'strength': 1},
   };
 
   // Class base stats
   static const Map<String, Map<String, int>> CLASS_BASE_STATS = {
-    'Warrior': {'strength': 8, 'constitution': 7, 'agility': 4, 'wisdom': 3},
-    'Ranger': {'agility': 8, 'wisdom': 6, 'strength': 5, 'constitution': 3},
-    'Wizard': {'wisdom': 9, 'constitution': 3, 'agility': 4, 'strength': 6},
-    'Rogue': {'agility': 9, 'wisdom': 5, 'strength': 4, 'constitution': 4},
+    'Warrior': {'strength': 8, 'constitution': 7, 'dexterity': 4, 'wisdom': 3},
+    'Ranger': {'dexterity': 8, 'wisdom': 6, 'strength': 5, 'constitution': 3},
+    'Wizard': {'wisdom': 9, 'constitution': 3, 'dexterity': 4, 'strength': 6},
+    'Rogue': {'dexterity': 9, 'wisdom': 5, 'strength': 4, 'constitution': 4},
   };
 
   // Quest difficulty XP multipliers
