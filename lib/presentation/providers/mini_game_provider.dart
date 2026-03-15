@@ -27,9 +27,9 @@ class GemsNotifier extends StateNotifier<int> {
   bool canAfford(int cost) => state >= cost;
 }
 
-/// Determines if a mini-game should be triggered (30% chance)
-bool shouldTriggerMiniGame() {
-  return Random().nextInt(100) < 30;
+/// Determines if a mini-game should be bypassed (10% chance to skip)
+bool shouldBypassMiniGame() {
+  return Random().nextInt(100) < 10;
 }
 
 /// Selects a random mini-game type and theme

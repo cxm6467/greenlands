@@ -85,7 +85,28 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
     try {
       final objective = _quest!.objectives[index];
       if (!objective.completed) {
-        // Always trigger a mini-game for quest objective completion
+        // 10% chance to bypass mini-game entirely
+        if (shouldBypassMiniGame()) {
+          // Bypass successful!
+          await ref.read(questActionsProvider).updateQuestObjectives(
+            widget.questId,
+            [index],
+          );
+          await _loadQuest();
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Objective completed! (Lucky bypass!) ✨'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 1),
+              ),
+            );
+          }
+          return;
+        }
+
+        // Otherwise trigger a mini-game
         if (mounted) {
           final result = await Navigator.push<MiniGameResult?>(
             context,
