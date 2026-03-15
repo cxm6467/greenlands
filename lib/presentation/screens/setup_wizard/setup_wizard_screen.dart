@@ -160,40 +160,12 @@ class _SetupWizardScreenState extends ConsumerState<SetupWizardScreen> {
           top: BorderSide(color: GreenlandsTheme.borderColor, width: 1),
         ),
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Back button
-          if (state.currentStep > 0)
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => notifier.previousStep(),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: GreenlandsTheme.accentGold),
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: const Text('BACK'),
-              ),
-            ),
-          if (state.currentStep > 0) const SizedBox(width: 16),
-
-          // Skip button (for optional steps that fail validation)
-          if (canSkip) ...[
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => notifier.nextStep(),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: GreenlandsTheme.textSecondary),
-                  padding: const EdgeInsets.all(16),
-                ),
-                child: const Text('SKIP'),
-              ),
-            ),
-            const SizedBox(width: 16),
-          ],
-
-          // Next/Save button
-          Expanded(
-            flex: 2,
+          // Primary action: Next/Save button (full width)
+          SizedBox(
+            width: double.infinity,
             child: ElevatedButton(
               onPressed: canGoNext
                   ? () => _handleNext(context, state, notifier, isLastStep)
@@ -206,6 +178,42 @@ class _SetupWizardScreenState extends ConsumerState<SetupWizardScreen> {
               ),
               child: Text(isLastStep ? 'SAVE & FINISH' : 'NEXT'),
             ),
+          ),
+          const SizedBox(height: 12),
+
+          // Secondary actions: Back and Skip buttons (in a row)
+          Row(
+            children: [
+              // Back button
+              if (state.currentStep > 0)
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => notifier.previousStep(),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: GreenlandsTheme.accentGold),
+                      padding: const EdgeInsets.all(12),
+                    ),
+                    child: const Text('BACK', style: TextStyle(fontSize: 12)),
+                  ),
+                ),
+
+              // Skip button (for optional steps that fail validation)
+              if (canSkip) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => notifier.nextStep(),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(
+                        color: GreenlandsTheme.textSecondary,
+                      ),
+                      padding: const EdgeInsets.all(12),
+                    ),
+                    child: const Text('SKIP', style: TextStyle(fontSize: 12)),
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),

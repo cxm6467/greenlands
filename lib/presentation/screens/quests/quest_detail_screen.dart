@@ -380,26 +380,34 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
           ),
           const SizedBox(height: 24),
 
-          // Action button
+          // Action button - full width for mobile
           if (_quest!.isAvailable)
-            ElevatedButton.icon(
-              onPressed: _acceptQuest,
-              icon: const Icon(Icons.check_circle_outline),
-              label: const Text('ACCEPT QUEST'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _acceptQuest,
+                icon: const Icon(Icons.check_circle_outline),
+                label: const Text('ACCEPT QUEST'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                ),
               ),
             ),
           if (_quest!.isActive && _quest!.areAllObjectivesCompleted)
-            ElevatedButton.icon(
-              onPressed: _completeQuest,
-              icon: const Icon(Icons.emoji_events),
-              label: const Text('COMPLETE QUEST'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
-                backgroundColor: GreenlandsTheme.accentGold,
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _completeQuest,
+                icon: const Icon(Icons.emoji_events),
+                label: const Text('COMPLETE QUEST'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(16),
+                  backgroundColor: GreenlandsTheme.accentGold,
+                  foregroundColor: Colors.black,
+                ),
               ),
             ),
+          const SizedBox(height: 8),
         ],
       ),
     );

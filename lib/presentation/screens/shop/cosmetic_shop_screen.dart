@@ -45,11 +45,17 @@ class CosmeticShopScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // Add Gems button (stub IAP)
-          ElevatedButton.icon(
-            onPressed: () => _showIapStubDialog(context),
-            icon: const Icon(Icons.add),
-            label: const Text('ADD GEMS'),
+          // Add Gems button (stub IAP) - full width
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => _showIapStubDialog(context),
+              icon: const Icon(Icons.add),
+              label: const Text('ADD GEMS'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(12),
+              ),
+            ),
           ),
           const SizedBox(height: 24),
           // Items by type
@@ -172,17 +178,31 @@ class CosmeticShopScreen extends ConsumerWidget {
                               ? GreenlandsTheme.accentGold
                               : Colors.red,
                           fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      ElevatedButton(
-                        onPressed: canAfford
-                            ? () =>
-                                  _purchaseItem(context, ref, item, currentGems)
-                            : null,
-                        child: const Text(
-                          'BUY',
-                          style: TextStyle(fontSize: 12),
+                      SizedBox(
+                        width: 80,
+                        child: ElevatedButton(
+                          onPressed: canAfford
+                              ? () => _purchaseItem(
+                                  context,
+                                  ref,
+                                  item,
+                                  currentGems,
+                                )
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 8,
+                            ),
+                          ),
+                          child: const Text(
+                            'BUY',
+                            style: TextStyle(fontSize: 11),
+                          ),
                         ),
                       ),
                     ],
