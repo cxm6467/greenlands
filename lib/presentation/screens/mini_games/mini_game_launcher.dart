@@ -34,7 +34,9 @@ class _MiniGameLauncherState extends State<MiniGameLauncher> {
     theme = selectedTheme;
   }
 
-  void _onGameComplete() {
+  void _onGameComplete() => _handleGameComplete();
+
+  void _handleGameComplete() {
     if (widget.autoClose) {
       if (mounted) {
         Navigator.of(context).pop(result);

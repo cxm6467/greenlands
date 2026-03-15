@@ -36,10 +36,12 @@ class ShopNotifier extends StateNotifier<List<CosmeticItem>> {
 
   /// Equip a cosmetic item (unequips others of the same type)
   void equipItem(String itemId) {
-    final item = state.firstWhere(
-      (i) => i.id == itemId,
-      orElse: () => throw Exception('Item not found'),
-    );
+    late final CosmeticItem item;
+    try {
+      item = state.firstWhere((i) => i.id == itemId);
+    } catch (_) {
+      throw Exception('Item not found');
+    }
 
     state = state.map((cosmetic) {
       // Unequip others of the same type
