@@ -85,7 +85,7 @@ jobs:
         run: flutter pub get
 
       - name: Build web app
-        run: flutter build web --release
+        run: flutter build web --release --dart-define="AI_PROXY_URL=https://greenfield.chrismarasco.io/api/claude"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -95,7 +95,7 @@ jobs:
           retention-days: 5
 
   deploy:
-    name: Deploy to Firebase
+    name: Deploy to AWS S3 + CloudFront
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -110,10 +110,19 @@ jobs:
           name: web-build
           path: build/web
 
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync build/web/ s3://${{ secrets.AWS_S3_BUCKET }}/ --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
