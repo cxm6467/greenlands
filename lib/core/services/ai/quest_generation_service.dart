@@ -47,21 +47,24 @@ class QuestGenerationService {
       final String apiUrl;
       final Map<String, String> headers;
 
-      if (kIsWeb) {
-        // Use proxy on web to avoid CORS and protect API key
-        // Proxy URL can point to local (http://localhost:3001) or Firebase (/api/claude)
-        apiUrl = '${AppConfig.aiProxyUrl}/messages';
-        headers = {'content-type': 'application/json'};
-        _logger.i('Using proxy server for web platform: $apiUrl');
-      } else {
-        // Direct API call on mobile/desktop
+      final useDirectApi = !kIsWeb || _apiKey.isNotEmpty;
+
+      if (useDirectApi && _apiKey.isNotEmpty) {
+        // Direct API call (mobile/desktop or web with API key)
         apiUrl = 'https://api.anthropic.com/v1/messages';
         headers = {
           'x-api-key': _apiKey,
           'anthropic-version': '2023-06-01',
           'content-type': 'application/json',
         };
-        _logger.i('Using direct API for non-web platform');
+        _logger.i(
+          'Using direct Claude API (${kIsWeb ? 'web with API key' : 'native platform'})',
+        );
+      } else {
+        // Use proxy on web to avoid CORS when no direct API available
+        apiUrl = '${AppConfig.aiProxyUrl}/messages';
+        headers = {'content-type': 'application/json'};
+        _logger.i('Using proxy server for web platform: $apiUrl');
       }
 
       final response = await _dio.post(
