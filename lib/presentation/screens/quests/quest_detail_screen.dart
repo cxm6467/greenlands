@@ -142,17 +142,9 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
               );
             }
           } else {
-            // Game was lost or closed
+            // Game was lost or closed - show options
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Try again! Complete the mini-game to finish this objective.',
-                  ),
-                  backgroundColor: Colors.orange,
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              _showLossDialog(index);
             }
           }
         }
@@ -233,6 +225,36 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
         );
       }
     }
+  }
+
+  void _showLossDialog(int objectiveIndex) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('❌ GAME OVER'),
+        content: const Text(
+          'You lost the mini-game. No credit for this objective. What would you like to do?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Try the same objective again
+              _toggleObjective(objectiveIndex);
+            },
+            child: const Text('RETRY THIS OBJECTIVE'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Close and try another step
+            },
+            child: const Text('TRY ANOTHER OBJECTIVE'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
